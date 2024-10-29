@@ -30,11 +30,7 @@ export function Footer() {
     <footer className="py-2">
       <div className="flex w-full flex-wrap items-center justify-center gap-6 px-2">
         <Typography variant="small" className="font-normal text-inherit">
-<<<<<<< HEAD
           Copyright@ {currentYear} by{" "}
-=======
-          Copyright@ {year} by{" "}
->>>>>>> 2f796a100f58db5c9aa09c121a896aa98aea6cdd
           <a
             href={brandLink}
             target="_blank"
