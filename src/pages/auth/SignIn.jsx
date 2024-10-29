@@ -16,8 +16,8 @@ import Logo from "../../assets/logo.jpg";
 import { toast } from "react-toastify";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("testadmin");
-  const [password, setPassword] = useState("6570");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
