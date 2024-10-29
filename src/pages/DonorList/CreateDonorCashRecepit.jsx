@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../../base/BaseUrl";
 import moment from "moment/moment";
 import { Button, Card, CardBody, Input } from "@material-tailwind/react";
-import year from "../../components/common/year";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -172,7 +171,26 @@ const DonorDonationReceipt = () => {
     new Date().toISOString().split("T")[0]
   );
   const [check, setCheck] = useState(false);
+  //fetchyear
+  const [currentYear, setCurrentYear] = useState("");
+  useEffect(() => {
+    const fetchYearData = async () => {
+      try {
+        const response = await axios.get(`${BaseUrl}/fetch-year`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
+        setCurrentYear(response.data.year.current_year);
+        console.log(response.data.year.current_year);
+      } catch (error) {
+        console.error("Error fetching year data:", error);
+      }
+    };
+
+    fetchYearData();
+  }, []);
   useEffect(() => {
     var theLoginToken = localStorage.getItem("token");
     const requestOptions = {
@@ -334,7 +352,7 @@ const DonorDonationReceipt = () => {
 
     let data = {
       donor_fts_id: userdata.donor_fts_id,
-      c_receipt_financial_year: year,
+      c_receipt_financial_year: currentYear,
       c_receipt_date: check ? dayClose : dayClose,
       c_receipt_exemption_type: donor.c_receipt_exemption_type,
       c_receipt_total_amount: donor.c_receipt_total_amount,

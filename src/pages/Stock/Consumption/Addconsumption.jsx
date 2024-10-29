@@ -17,10 +17,11 @@ const unitOptions = [
 const AddConsumption = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
-
+  const [currentYear, setCurrentYear] = useState("");
+  console.log("years", currentYear);
   const [cons, setCons] = useState({
     cons_date: new Date().toISOString().split("T")[0],
-    cons_year: "2023-24",
+    cons_year: currentYear,
     cons_count: "",
     cons_sub_data: [],
   });
@@ -33,6 +34,25 @@ const AddConsumption = () => {
   const [users, setUsers] = useState([useTemplate]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+  //FRTCH YEAR
+  useEffect(() => {
+    const fetchYearData = async () => {
+      try {
+        const response = await axios.get(`${BaseUrl}/fetch-year`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        setCurrentYear(response.data.year.current_year);
+        console.log(response.data.year.current_year, "year");
+      } catch (error) {
+        console.error("Error fetching year data:", error);
+      }
+    };
+
+    fetchYearData();
+  }, []);
   useEffect(() => {
     const fetchItemData = async () => {
       const response = await axios.get(`${BaseUrl}/fetch-item`, {
@@ -77,7 +97,7 @@ const AddConsumption = () => {
     e.preventDefault();
     const data = {
       cons_date: cons.cons_date,
-      cons_year: cons.cons_year,
+      cons_year: currentYear,
       cons_count: fabric_inward_count,
       cons_sub_data: users,
     };
@@ -122,7 +142,7 @@ const AddConsumption = () => {
                 type="date"
                 id="purchase_date"
                 name="purchase_date"
-                label="date"
+                label="Date"
                 value={cons.cons_date}
                 onChange={onInputChange}
                 required

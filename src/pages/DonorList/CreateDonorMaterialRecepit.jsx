@@ -15,137 +15,11 @@ import {
   IconButton,
   Input,
 } from "@material-tailwind/react";
-import year from "../../components/common/year";
 
 // Unit options for dropdown
 const unitOptions = [
   { value: "Kg", label: "Kg" },
   { value: "Ton", label: "Ton" },
-];
-const exemption = [
-  {
-    value: "80G",
-    label: "80G",
-  },
-  {
-    value: "Non 80G",
-    label: "Non 80G",
-  },
-  {
-    value: "FCRA",
-    label: "FCRA",
-  },
-  {
-    value: "CSR",
-    label: "CSR",
-  },
-];
-
-const pay_mode = [
-  {
-    value: "Cash",
-    label: "Cash",
-  },
-  {
-    value: "Cheque",
-    label: "Cheque",
-  },
-  {
-    value: "Transfer",
-    label: "Transfer",
-  },
-  {
-    value: "Others",
-    label: "Others",
-  },
-];
-
-const pay_mode_2 = [
-  {
-    value: "Cheque",
-    label: "Cheque",
-  },
-  {
-    value: "Transfer",
-    label: "Transfer",
-  },
-  {
-    value: "Others",
-    label: "Others",
-  },
-];
-
-const family_check = [
-  {
-    value: "Yes",
-    label: "Yes",
-  },
-  {
-    value: "No",
-    label: "No",
-  },
-];
-
-const donation_type = [
-  {
-    value: "Gopalak",
-    label: "Gopalak",
-  },
-  {
-    value: "Wet/Dry-Grass",
-    label: "Wet/Dry-Grass",
-  },
-  {
-    value: "FIne/Rough Bran",
-    label: "FIne/Rough Bran",
-  },
-  {
-    value: "Gou-Daan",
-    label: "Gou-Daan",
-  },
-  {
-    value: "Building Fund",
-    label: "Building Fund",
-  },
-  {
-    value: "Pigeon Feeds",
-    label: "Pigeon Feeds",
-  },
-  {
-    value: "General Fund/Others",
-    label: "General Fund/Others",
-  },
-];
-
-const donation_type_2 = [
-  {
-    value: "Gopalak",
-    label: "Gopalak",
-  },
-  {
-    value: "Wet/Dry-Grass",
-    label: "Wet/Dry-Grass",
-  },
-  {
-    value: "FIne/Rough Bran",
-    label: "FIne/Rough Bran",
-  },
-  {
-    value: "Gou-Daan",
-    label: "Gou-Daan",
-  },
-  {
-    value: "Building Fund",
-    label: "Building Fund",
-  },
-  {
-    value: "Pigeon Feeds",
-    label: "Pigeon Feeds",
-  },
-  {
-    value: "General Fund/Others",
-    label: "General Fund/Others",
-  },
 ];
 
 const DonorDonationReceipt = () => {
@@ -219,6 +93,26 @@ const DonorDonationReceipt = () => {
   const [users, setUsers] = useState([useTemplate]);
   const [fabric_inward_count, setCount] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  //fetch year
+  const [currentYear, setCurrentYear] = useState("");
+  useEffect(() => {
+    const fetchYearData = async () => {
+      try {
+        const response = await axios.get(`${BaseUrl}/fetch-year`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        setCurrentYear(response.data.year.current_year);
+        console.log(response.data.year.current_year);
+      } catch (error) {
+        console.error("Error fetching year data:", error);
+      }
+    };
+
+    fetchYearData();
+  }, []);
   //FETCH OCCASION
   const [occasion, setOccasion] = useState([]);
   useEffect(() => {
@@ -330,26 +224,12 @@ const DonorDonationReceipt = () => {
 
   const pan = userdata.donor_pan_no == "" ? "NA" : userdata.donor_pan_no;
 
-  // const AmountCal = (selectedValue) => {
-  //   const tempUsers = [...users];
-  //   setUsers(tempUsers);
-  //   const result = [];
-  //   for (let i = 0; i < users.length; i++) {
-  //     result.push(users[i].c_receipt_sub_amount);
-  //   }
-  //   const valu = result.reduce((acc, curr) => acc + parseInt(curr), 0);
-  //   const total = +parseInt(valu || 0);
-  //   setDonor((donor) => ({
-  //     ...donor,
-  //     c_receipt_total_amount: total,
-  //   }));
-  // };
   const onSubmit = (e) => {
     e.preventDefault();
 
     let data = {
       indicomp_fts_id: userdata.donor_fts_id,
-      m_receipt_financial_year: year,
+      m_receipt_financial_year: currentYear,
       m_receipt_date: check ? dayClose : dayClose,
       m_receipt_total_amount: donor.m_receipt_total_amount,
       m_receipt_tran_pay_mode: donor.m_receipt_tran_pay_mode,
@@ -411,23 +291,21 @@ const DonorDonationReceipt = () => {
     navigate("/donor-list");
   };
 
+  //FETCH OCCASION
+  // const [occasion, setOccasion] = useState([]);
+  // useEffect(() => {
+  //   var theLoginToken = localStorage.getItem("token");
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: "Bearer " + theLoginToken,
+  //     },
+  //   };
 
-
-      //FETCH OCCASION
-      // const [occasion, setOccasion] = useState([]);
-      // useEffect(() => {
-      //   var theLoginToken = localStorage.getItem("token");
-      //   const requestOptions = {
-      //     method: "GET",
-      //     headers: {
-      //       Authorization: "Bearer " + theLoginToken,
-      //     },
-      //   };
-  
-      //   fetch(BaseUrl + "/fetch-occasion", requestOptions)
-      //     .then((response) => response.json())
-      //     .then((data) => setOccasion(data.occasion));
-      // }, []);
+  //   fetch(BaseUrl + "/fetch-occasion", requestOptions)
+  //     .then((response) => response.json())
+  //     .then((data) => setOccasion(data.occasion));
+  // }, []);
   useEffect(() => {
     axios({
       url: BaseUrl + "/fetch-donor-by-id/" + id,
