@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../../base/BaseUrl";
 import moment from "moment/moment";
 import { Button, Card, CardBody, Input } from "@material-tailwind/react";
+import year from "../../components/common/year";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -333,7 +334,7 @@ const DonorDonationReceipt = () => {
 
     let data = {
       donor_fts_id: userdata.donor_fts_id,
-      c_receipt_financial_year: "2024-25",
+      c_receipt_financial_year: year,
       c_receipt_date: check ? dayClose : dayClose,
       c_receipt_exemption_type: donor.c_receipt_exemption_type,
       c_receipt_total_amount: donor.c_receipt_total_amount,

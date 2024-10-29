@@ -3,12 +3,11 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 
-// Register the required components
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const DonationBarChart = ({ chartData }) => {
   const data = {
-    labels: chartData.labels, // Labels for the X-axis
+    labels: chartData.labels, 
     datasets: [
       {
         label: 'Donation Amount',

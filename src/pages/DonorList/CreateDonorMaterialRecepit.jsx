@@ -15,6 +15,7 @@ import {
   IconButton,
   Input,
 } from "@material-tailwind/react";
+import year from "../../components/common/year";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -348,7 +349,7 @@ const DonorDonationReceipt = () => {
 
     let data = {
       indicomp_fts_id: userdata.donor_fts_id,
-      m_receipt_financial_year: "2024-25",
+      m_receipt_financial_year: year,
       m_receipt_date: check ? dayClose : dayClose,
       m_receipt_total_amount: donor.m_receipt_total_amount,
       m_receipt_tran_pay_mode: donor.m_receipt_tran_pay_mode,

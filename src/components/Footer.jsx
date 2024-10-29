@@ -1,7 +1,7 @@
 import { Typography } from "@material-tailwind/react";
-
+import year from "./common/year";
 export function Footer() {
-  const year = new Date().getFullYear();
+  // const year = new Date().getFullYear();
   const brandName = "AG Solutions";
   const brandLink = "https://www.ag-solutions.in";
 
@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="py-2">
       <div className="flex w-full flex-wrap items-center justify-center gap-6 px-2">
         <Typography variant="small" className="font-normal text-inherit">
-          Copyright@ 2024-25 by{" "}
+          Copyright@ {year} by{" "}
           <a
             href={brandLink}
             target="_blank"

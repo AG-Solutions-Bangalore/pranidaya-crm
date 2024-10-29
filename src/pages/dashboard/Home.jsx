@@ -11,6 +11,7 @@ import ApexCharts from "apexcharts";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import CloseIcon from "@mui/icons-material/Close";
+import year from "../../components/common/year";
 
 const NewsDashboard = () => {
   Chart.register(ArcElement, ...registerables);
@@ -24,13 +25,18 @@ const NewsDashboard = () => {
   const [isPieVisible, setIsPieVisible] = useState(true);
   const [isPieMinimized, setIsPieMinimized] = useState(false);
 
+  const [graph1, setGraph1] = useState([]);
+  const [graph2, setGraph2] = useState([]);
+  const [graph3, setGraph3] = useState([]);
+  const [graph4, setGraph4] = useState([]);
+
   const navigate = useNavigate();
-  const dateyear = "2023-2024";
+  const dateyear = year;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios({
+        const res = await axios({
           url: `${BaseUrl}/fetch-dashboard-data-by/${dateyear}`,
           method: "GET",
           headers: {
@@ -38,8 +44,25 @@ const NewsDashboard = () => {
           },
         });
 
-        setResults(response.data);
-        setStock(response.data.stock);
+        setResults(res.data);
+        setStock(res.data.stock);
+        const barLabels = res.data.graphbar.map(
+          (item) => item.c_receipt_sub_donation_type
+        );
+        const barValues = res.data.graphbar.map((item) =>
+          parseInt(item.total_amount)
+        );
+        const pieLabels = res.data.graphpie.map(
+          (item) => item.c_receipt_tran_pay_mode
+        );
+        const pieValues = res.data.graphpie.map((item) =>
+          parseInt(item.total_amount)
+        );
+
+        setGraph1(barLabels);
+        setGraph2(barValues);
+        setGraph3(pieLabels);
+        setGraph4(pieValues);
       } catch (error) {
         console.error(error);
       }
@@ -54,104 +77,70 @@ const NewsDashboard = () => {
   };
 
   useEffect(() => {
-    const donutLabels = [
-      "Building Fund",
-      "Fine/Rough Bran",
-      "General Fund/Others",
-      "Gopalak",
-      "Gou-Daan",
-      "Pigeon Feeds",
-      "Wet/Dry-Grass",
-    ];
-    const donutSeries = [20000, 15000, 30000, 25000, 50000, 10000, 40000];
-
-    setGraphData({
-      labels: donutLabels,
-      datasets: [
-        {
-          data: donutSeries,
-          backgroundColor: [
-            "#1C64F2",
-            "#16BDCA",
-            "#FDBA8C",
-            "#E74694",
-            "#F59E0B",
-            "#10B981",
-            "#6366F1",
-          ],
-          hoverBackgroundColor: [
-            "#1654C0",
-            "#13A5B0",
-            "#FC9D7C",
-            "#D93B84",
-            "#E78F0A",
-            "#0F9872",
-            "#5458E0",
-          ],
-        },
-      ],
-    });
-  }, []);
+    if (graph1.length > 0 && graph2.length > 0) {
+      setGraphData({
+        labels: graph1,
+        datasets: [
+          {
+            data: graph2,
+            backgroundColor: [
+              "#1C64F2",
+              "#16BDCA",
+              "#FDBA8C",
+              "#E74694",
+              "#F59E0B",
+              "#10B981",
+              "#6366F1",
+            ],
+            hoverBackgroundColor: [
+              "#1654C0",
+              "#13A5B0",
+              "#FC9D7C",
+              "#D93B84",
+              "#E78F0A",
+              "#0F9872",
+              "#5458E0",
+            ],
+          },
+        ],
+      });
+    }
+  }, [graph1, graph2]);
 
   const renderBarChart = () => {
+    if (!graphData || graphData.datasets[0].data.length === 0) {
+      return;
+    }
+
     if (barChartInstance) {
       barChartInstance.destroy();
     }
 
     const chartConfig = {
       series: [
-        {
-          name: "Donation Distribution",
-          data: graphData.datasets[0].data,
-        },
+        { name: "Donation Distribution", data: graphData.datasets[0].data },
       ],
-      chart: {
-        type: "bar",
-        height: 360,
-        toolbar: {
-          show: false,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
+      chart: { type: "bar", height: 360, toolbar: { show: false } },
+      dataLabels: { enabled: false },
       colors: ["#020617"],
-      plotOptions: {
-        bar: {
-          columnWidth: "40%",
-          borderRadius: 2,
-        },
-      },
+      plotOptions: { bar: { columnWidth: "40%", borderRadius: 2 } },
       xaxis: {
         categories: graphData.labels,
         labels: {
-          style: {
-            colors: "#616161",
-            fontSize: "12px",
-            fontWeight: 400,
-          },
+          style: { colors: "#616161", fontSize: "12px", fontWeight: 400 },
         },
       },
       yaxis: {
         labels: {
-          style: {
-            colors: "#616161",
-            fontSize: "12px",
-            fontWeight: 400,
-          },
+          style: { colors: "#616161", fontSize: "12px", fontWeight: 400 },
         },
       },
       grid: {
         show: true,
         borderColor: "#dddddd",
-        padding: {
-          top: 5,
-          right: 20,
-        },
+        padding: { top: 5, right: 20 },
       },
-      tooltip: {
-        theme: "dark",
-      },
+      tooltip: { theme: "dark" },
     };
 
     const chart = new ApexCharts(
@@ -161,6 +150,17 @@ const NewsDashboard = () => {
     chart.render();
     setBarChartInstance(chart);
   };
+
+  useEffect(() => {
+    if (
+      graphData &&
+      graphData.datasets[0].data.length > 0 &&
+      isBarVisible &&
+      !isBarMinimized
+    ) {
+      renderBarChart();
+    }
+  }, [graphData, isBarVisible, isBarMinimized]);
 
   useEffect(() => {
     if (graphData && isBarVisible && !isBarMinimized) {
@@ -174,8 +174,8 @@ const NewsDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Total Donor Count */}
           {results.length !== 0 && (
-            <div className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
-              <h3 className="text-xl font-bold">Total Donor Count</h3>
+            <div className="bg-gray-500 text-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
+              <h3 className="text-xl font-bold">Total Donors</h3>
               <p className="text-5xl font-bold">
                 <CountUp
                   start={0}
@@ -188,7 +188,7 @@ const NewsDashboard = () => {
 
           {/* Total Website Donation */}
           {results.length !== 0 && (
-            <div className="bg-gradient-to-r from-blue-400 to-orange-600 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
+            <div className="bg-blue-500 text-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
               <h3 className="text-xl font-bold">Total Website Donation</h3>
               <p className="text-5xl font-bold">
                 <CountUp
@@ -202,7 +202,7 @@ const NewsDashboard = () => {
 
           {/* Total Material Donation */}
           {results.length !== 0 && (
-            <div className="bg-gradient-to-r from-green-400 to-grey-600 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)]  rounded-md text-center min-h-[150px] flex flex-col items-center justify-center ">
+            <div className="bg-purple-500 text-white  rounded-md text-center min-h-[150px] flex flex-col items-center justify-center ">
               <h3 className="text-xl font-bold">Total Material Donation</h3>
               <p className="text-5xl font-bold">
                 <CountUp
@@ -215,7 +215,7 @@ const NewsDashboard = () => {
           )}
           {/* Total Donation */}
           {results.length !== 0 && (
-            <div className="bg-gradient-to-r from-yellow-400 to-pink-600 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
+            <div className="bg-green-500 text-white  rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
               <h3 className="text-xl font-bold">Total Donation</h3>
               <p className="text-5xl font-bold">
                 <CountUp
@@ -229,6 +229,9 @@ const NewsDashboard = () => {
         </div>
 
         {/* Current Month Stocks */}
+        <h3 className="mt-4 text-lg text-black font-medium">
+          Current Month Stocks (in Kgs)
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mt-4">
           {stock.map((value, index) => (
             <div
@@ -252,7 +255,7 @@ const NewsDashboard = () => {
           ))}
         </div>
 
-        <div className="news-dashboard-wrapper mt-6">
+        <div className="news-dashboard-wrapper ">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               {isPieVisible && (
