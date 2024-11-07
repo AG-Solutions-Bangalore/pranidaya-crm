@@ -291,6 +291,23 @@ const DonorDonationReceipt = () => {
     navigate("/donor-list");
   };
 
+
+
+      //FETCH OCCASION
+      // const [occasion, setOccasion] = useState([]);
+      // useEffect(() => {
+      //   var theLoginToken = localStorage.getItem("token");
+      //   const requestOptions = {
+      //     method: "GET",
+      //     headers: {
+      //       Authorization: "Bearer " + theLoginToken,
+      //     },
+      //   };
+  
+      //   fetch(BaseUrl + "/fetch-occasion", requestOptions)
+      //     .then((response) => response.json())
+      //     .then((data) => setOccasion(data.occasion));
+      // }, []);
   useEffect(() => {
     axios({
       url: BaseUrl + "/fetch-donor-by-id/" + id,
