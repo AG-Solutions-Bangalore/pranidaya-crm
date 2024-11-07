@@ -24,11 +24,6 @@ const NewsDashboard = () => {
   const [isPieVisible, setIsPieVisible] = useState(true);
   const [isPieMinimized, setIsPieMinimized] = useState(false);
   const [currentYear, setCurrentYear] = useState("");
-<<<<<<< HEAD
-=======
-
-  
->>>>>>> 5e8a2bff6c5c6063170836e4a8ef32500fd508fa
 
   const [graph1, setGraph1] = useState([]);
   const [graph2, setGraph2] = useState([]);
