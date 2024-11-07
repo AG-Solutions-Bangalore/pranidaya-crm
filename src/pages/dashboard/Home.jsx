@@ -11,7 +11,6 @@ import ApexCharts from "apexcharts";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import CloseIcon from "@mui/icons-material/Close";
-import year from "../../components/common/year";
 
 const NewsDashboard = () => {
   Chart.register(ArcElement, ...registerables);
@@ -24,6 +23,7 @@ const NewsDashboard = () => {
   const [barChartInstance, setBarChartInstance] = useState(null);
   const [isPieVisible, setIsPieVisible] = useState(true);
   const [isPieMinimized, setIsPieMinimized] = useState(false);
+  const [currentYear, setCurrentYear] = useState("");
 
   const [graph1, setGraph1] = useState([]);
   const [graph2, setGraph2] = useState([]);
@@ -31,46 +31,68 @@ const NewsDashboard = () => {
   const [graph4, setGraph4] = useState([]);
 
   const navigate = useNavigate();
-  const dateyear = year;
-
+  const dateyear = currentYear;
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchYearData = async () => {
       try {
-        const res = await axios({
-          url: `${BaseUrl}/fetch-dashboard-data-by/${dateyear}`,
-          method: "GET",
+        const response = await axios.get(`${BaseUrl}/fetch-year`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
-        setResults(res.data);
-        setStock(res.data.stock);
-        const barLabels = res.data.graphbar.map(
-          (item) => item.c_receipt_sub_donation_type
-        );
-        const barValues = res.data.graphbar.map((item) =>
-          parseInt(item.total_amount)
-        );
-        const pieLabels = res.data.graphpie.map(
-          (item) => item.c_receipt_tran_pay_mode
-        );
-        const pieValues = res.data.graphpie.map((item) =>
-          parseInt(item.total_amount)
-        );
-
-        setGraph1(barLabels);
-        setGraph2(barValues);
-        setGraph3(pieLabels);
-        setGraph4(pieValues);
+        setCurrentYear(response.data.year.current_year);
+        console.log(response.data.year.current_year);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching year data:", error);
+      }
+    };
+
+    fetchYearData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (currentYear) {
+        try {
+          const res = await axios({
+            url: `${BaseUrl}/fetch-dashboard-data-by/${currentYear}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          setResults(res.data);
+          setStock(res.data.stock);
+
+          // Extract bar and pie chart data
+          const barLabels = res.data.graphbar.map(
+            (item) => item.c_receipt_sub_donation_type
+          );
+          const barValues = res.data.graphbar.map((item) =>
+            parseInt(item.total_amount)
+          );
+          const pieLabels = res.data.graphpie.map(
+            (item) => item.c_receipt_tran_pay_mode
+          );
+          const pieValues = res.data.graphpie.map((item) =>
+            parseInt(item.total_amount)
+          );
+
+          // Set chart data
+          setGraph1(barLabels);
+          setGraph2(barValues);
+          setGraph3(pieLabels);
+          setGraph4(pieValues);
+        } catch (error) {
+          console.error("Error fetching dashboard data:", error);
+        }
       }
     };
 
     fetchData();
-  }, [navigate]);
-
+  }, [currentYear, navigate]);
   const handleReload = () => {
     console.log("Reloading data...");
     fetchData();

@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../../base/BaseUrl";
 import moment from "moment/moment";
 import { Button, Card, CardBody, Input } from "@material-tailwind/react";
-import year from "../../components/common/year";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -150,7 +149,7 @@ const DonorDonationReceipt = () => {
 
   const [userfamilydata, setUserfFamilydata] = useState("");
 
-  console.log(id);
+  // console.log(id);
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
   var mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -172,7 +171,26 @@ const DonorDonationReceipt = () => {
     new Date().toISOString().split("T")[0]
   );
   const [check, setCheck] = useState(false);
+  //fetchyear
+  const [currentYear, setCurrentYear] = useState("");
+  useEffect(() => {
+    const fetchYearData = async () => {
+      try {
+        const response = await axios.get(`${BaseUrl}/fetch-year`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
+        setCurrentYear(response.data.year.current_year);
+        console.log(response.data.year.current_year);
+      } catch (error) {
+        console.error("Error fetching year data:", error);
+      }
+    };
+
+    fetchYearData();
+  }, []);
   useEffect(() => {
     var theLoginToken = localStorage.getItem("token");
     const requestOptions = {
@@ -329,12 +347,22 @@ const DonorDonationReceipt = () => {
       c_receipt_total_amount: total,
     }));
   };
+
+  const handlePurposeChange = (e, index) => {
+    const { name, value } = e.target;
+    // Update the specific user's purpose based on index
+    setUsers((prevUsers) =>
+      prevUsers.map((user, i) =>
+        i === index ? { ...user, [name]: value } : user
+      )
+    );
+  };
   const onSubmit = (e) => {
     e.preventDefault();
 
     let data = {
       donor_fts_id: userdata.donor_fts_id,
-      c_receipt_financial_year: year,
+      c_receipt_financial_year: currentYear,
       c_receipt_date: check ? dayClose : dayClose,
       c_receipt_exemption_type: donor.c_receipt_exemption_type,
       c_receipt_total_amount: donor.c_receipt_total_amount,
@@ -365,7 +393,7 @@ const DonorDonationReceipt = () => {
         .then((res) => {
           if (res.status == 200 && res.data.code == "200") {
             toast.success(res.data.msg || "Donor Created Successfully");
-            navigate(`/recepit-view/${res.data.latestid.id}`);
+            navigate(`/recepit-view/${res.data?.latestid?.id}`);
           } else {
             toast.error(res.data.message || "Error occurred");
           }
@@ -515,42 +543,35 @@ const DonorDonationReceipt = () => {
               ""
             )}
             {dayClose === todayback ? (
-              <Button disabled color="danger" className="bg-red-400">
+              <Button disabled className="bg-red-400">
                 + Day Close
               </Button>
             ) : (
               <Button
                 onClick={dayClose === todayback ? null : (e) => onDayClose(e)}
                 className="btn-get-started"
-                color="danger"
               >
                 + Day Close
               </Button>
             )}
           </div>
         </div>
-        <Card className="p-6 mt-5 bg-white shadow-md rounded-lg">
-          <CardBody>
-            <div className="grid grid-cols-1 md:grid-cols-3  lg:grid-cols-5 gap-4 mb-4">
+        <div className="p-4 ">
+          <div className="p-0">
+            <div className="grid grid-cols-1 md:grid-cols-3  lg:grid-cols-4 gap-4 ">
+              <div className="text-gray-700">{userdata.donor_full_name}</div>
               <div className="text-gray-700">
-                <strong>Name:</strong>
-                {userdata.donor_full_name}
+                {" "}
+                <strong>PDS Id:</strong> {userdata.donor_fts_id}
               </div>
               <div className="text-gray-700">
-                <strong>PDS ID:</strong>
-                {userdata.donor_fts_id}
-              </div>
-              <div className="text-gray-700">
-                <strong>Pan No:</strong>
-                {pan}
+                {" "}
+                <strong>Pan No:</strong> {pan}
               </div>
               <div className="text-gray-700">
                 <strong>Receipt Date:</strong>{" "}
-                {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")}{" "}
-              </div>
-              <div className="text-gray-700">
-                <strong>Year:</strong>
-                {finalyear}
+                {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")} (
+                {finalyear})
               </div>
             </div>
             {donor.c_receipt_total_amount > 2000 &&
@@ -562,76 +583,69 @@ const DonorDonationReceipt = () => {
             ) : (
               ""
             )}
-          </CardBody>
-        </Card>
-        <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
+          </div>
+        </div>
+        <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
               <div>
                 <Fields
-                  required
-                  select
+                  type="newwhatsappDropdown"
                   title="Category"
-                  type="whatsappDropdown"
                   name="c_receipt_exemption_type"
                   value={donor.c_receipt_exemption_type}
                   onChange={(e) => onInputChange(e)}
+                  required={true}
                   options={exemption}
                 />
               </div>
 
               <div>
-                {/* <label
-                  className={`${
-                    donor?.c_receipt_total_amount
-                      ? "label-active"
-                      : "label-inactive"
-                  } text-xs text-gray-500`}
-                >
-                  Total Amount*
-                </label> */}
-                <Input
-                  type="text"
-                  label="Total Amount"
-                  name="m_receipt_total_amount"
-                  value={donor?.c_receipt_total_amount || ""}
-                  onChange={(e) => onInputChange(e)}
-                  disabled
-                  // className="disabled:opacity-50"
-                  className={`${
-                    donor?.c_receipt_total_amount
-                      ? "label-active"
-                      : "label-inactive"
-                  } text-sm text-gray-500`}
-                />
-              </div>
-              <div>
                 <Fields
-                  required
-                  select
+                  type="transactionDropdown"
                   title="Transaction Type"
-                  type="TransactionType"
+                  required={true}
+                  options={
+                    donor.receipt_exemption_type == "80G" &&
+                    donor.receipt_total_amount > 2000
+                      ? pay_mode_2
+                      : pay_mode
+                  }
                   name="c_receipt_tran_pay_mode"
                   value={donor.c_receipt_tran_pay_mode}
                   onChange={(e) => onInputChange(e)}
-                  donor={donor}
-                  pay_mode={pay_mode}
-                  pay_mode_2={pay_mode_2}
                 />
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-              <div className="md:col-span-2">
+              <div className="flex">
                 <Fields
-                  type="textField"
-                  label="Transaction Pay Details"
-                  name="c_receipt_tran_pay_details"
-                  value={donor.c_receipt_tran_pay_details}
+                  type="familyDropdowns"
+                  title="Family Member"
+                  required={true}
+                  name="family_full_check"
+                  value={donor.family_full_check}
                   onChange={(e) => onInputChange(e)}
+                  options={family_check}
+                  className="inline"
                 />
+
+                {donor.family_full_check == "Yes" ? (
+                  <Fields
+                    select
+                    title="Family Member Name"
+                    type="familyDropdown"
+                    name="family_full_name"
+                    value={donor.family_full_name}
+                    onChange={(e) => onInputChange(e)}
+                    options={userfamilydata}
+                    className="inline "
+                    size="small"
+                    sx={{ marginTop: { md: "10px" } }}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
-              <div>
+              <div className="md:mt-4">
                 <Fields
                   select
                   title="On Occasion"
@@ -642,6 +656,19 @@ const DonorDonationReceipt = () => {
                   options={occasion}
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 md:my-5 ">
+              <div>
+                <Fields
+                  type="textField"
+                  label="Transaction Pay Details"
+                  name="c_receipt_tran_pay_details"
+                  value={donor.c_receipt_tran_pay_details}
+                  onChange={(e) => onInputChange(e)}
+                />
+              </div>
+
               <div>
                 <Fields
                   type="textField"
@@ -651,9 +678,7 @@ const DonorDonationReceipt = () => {
                   label="Manual Receipt No"
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-              <div className="md:col-span-2">
+              <div>
                 <Fields
                   type="textField"
                   name="c_receipt_remarks"
@@ -662,56 +687,53 @@ const DonorDonationReceipt = () => {
                   label="Remarks"
                 />
               </div>
-
               <div>
-                <Fields
-                  select
-                  title="Family Member"
-                  type="whatsappDropdown"
-                  name="family_full_check"
-                  value={donor.family_full_check}
+                <Input
+                  type="text"
+                  label="Total Amount"
+                  name="m_receipt_total_amount"
+                  value={donor?.c_receipt_total_amount || ""}
                   onChange={(e) => onInputChange(e)}
-                  options={family_check}
+                  disabled
+                  labelProps={{
+                    className: "!text-gray-500",
+                  }}
+                  className={`${
+                    donor?.c_receipt_total_amount
+                      ? "label-active"
+                      : "label-inactive"
+                  } text-sm text-gray-500`}
                 />
               </div>
-              {donor.family_full_check == "Yes" ? (
-                <div>
-                  <Fields
-                    select
-                    title="Family Member Name"
-                    type="familyDropdown"
-                    name="family_full_name"
-                    value={donor.family_full_name}
-                    onChange={(e) => onInputChange(e)}
-                    options={userfamilydata}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
             </div>
 
             {/* Line Items */}
             {users.map((user, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4"
+                className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4"
               >
-                <div className="md:col-span-2">
+                <div className="md:col-span-3 w-full md:w-auto">
                   <Fields
-                    required
-                    select
+                    type="PurposeDropdown"
                     title="Purpose"
-                    type="TransactionType1"
+                    required={true}
+                    options={
+                      donor?.receipt_exemption_type == "80G"
+                        ? donation_type_2
+                        : donation_type
+                    }
                     name="c_receipt_sub_donation_type"
-                    value={donor.c_receipt_sub_donation_type}
-                    onChange={(e) => onChange(e, index)}
-                    donor={donor}
-                    donation_type={donation_type}
-                    donation_type_2={donation_type_2}
-                  ></Fields>
+                    // value={donor.c_receipt_sub_donation_type}
+                    // onChange={(e) => {
+                    //   onChange(e, index);
+                    // }}
+                    value={users[index].c_receipt_sub_donation_type}
+                    onChange={(e) => handlePurposeChange(e, index)}
+                  />
                 </div>
-                <div className="md:col-span-2">
+
+                <div className="md:col-span-2 md:mt-6">
                   <Input
                     required
                     label="Amount"
@@ -728,7 +750,7 @@ const DonorDonationReceipt = () => {
                 <button
                   color="error"
                   onClick={() => removeUser(index)}
-                  className="flex items-center justify-center  text-red-600"
+                  className="flex items-center justify-left text-2xl  text-red-600 md:mt-4"
                   aria-label="Delete"
                 >
                   {" "}
@@ -739,7 +761,7 @@ const DonorDonationReceipt = () => {
 
             <div className="display-flex justify-start">
               <Button
-                color="primary"
+                // color="primary"
                 onClick={addItem}
                 className="mt-4 bg-blue-400"
               >
@@ -749,16 +771,16 @@ const DonorDonationReceipt = () => {
             <div className="flex justify-center mt-4 space-x-4">
               <Button
                 type="submit"
-                variant="contained"
-                color="primary"
+                // variant="contained"
+                // color="primary"
                 disabled={isButtonDisabled}
                 className="mt-4  bg-blue-400"
               >
                 Submit
               </Button>
               <Button
-                variant="contained"
-                color="secondary"
+                // variant="contained"
+                // color="secondary"
                 className="mt-4 bg-red-400"
                 onClick={handleBackButton}
               >

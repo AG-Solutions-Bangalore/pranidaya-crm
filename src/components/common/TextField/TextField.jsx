@@ -6,6 +6,8 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import { Input } from "@material-tailwind/react";
 
@@ -48,6 +50,274 @@ const Fields = (props) => {
           />
         </>
       )}
+
+      {props.type === "familyDropdowns" && (
+        <FormControl
+          fullWidth
+          sx={{
+            mb: { xs: 1, md: 0 },
+            minWidth: { xs: "100%", sm: "auto" },
+          }}
+        >
+          <InputLabel
+            shrink={true}
+            sx={{
+              mb: 0,
+              position: "relative",
+              fontSize: { xs: "0.875rem", md: "1rem" },
+            }}
+          >
+            <span className="text-md">
+              {props.title}{" "}
+              {props.required ? <span className="text-red-700">*</span> : null}
+            </span>
+          </InputLabel>
+
+          <ToggleButtonGroup
+            value={props.value}
+            exclusive
+            onChange={(event, newAlignment) => {
+              props.onChange({
+                target: { name: props.name, value: newAlignment },
+              });
+            }}
+            aria-label="text alignment"
+            sx={{
+              // display: "flex",
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              borderRadius: "5px",
+              gap: { xs: 1, sm: 0 },
+            }}
+          >
+            {props.options?.map((data, key) => (
+              <ToggleButton
+                className="!p-1 !px-2"
+                key={key}
+                value={data.value}
+                sx={{
+                  fontSize: { xs: "12px", md: "13px" },
+                  color: props.value === data.value ? "white" : "inherit",
+                  backgroundColor:
+                    props.value === data.value ? "#1C64F2" : "#1c64f24d",
+                  "&:hover": {
+                    backgroundColor: "#1c64f24d",
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#1C64F2",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#1654C0",
+                    },
+                  },
+                }}
+              >
+                {data.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </FormControl>
+      )}
+      {props.type === "newwhatsappDropdown" && (
+        <FormControl
+          fullWidth
+          sx={{
+            mb: { xs: 1, md: 0 },
+            minWidth: { xs: "100%", sm: "auto" },
+          }}
+        >
+          <InputLabel
+            shrink={true}
+            sx={{
+              mb: 0,
+              position: "relative",
+              fontSize: { xs: "0.875rem", md: "1rem" },
+            }}
+          >
+            <span className="text-md">
+              {props.title}{" "}
+              {props.required ? <span className="text-red-700">*</span> : null}
+            </span>
+          </InputLabel>
+
+          <ToggleButtonGroup
+            value={props.value}
+            exclusive
+            onChange={(event, newAlignment) => {
+              props.onChange({
+                target: { name: props.name, value: newAlignment },
+              });
+            }}
+            aria-label="text alignment"
+            sx={{
+              display: "flex",
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              borderRadius: "5px",
+              gap: { xs: 1, sm: 0 },
+            }}
+          >
+            {props.options?.map((data, key) => (
+              <ToggleButton
+                className="!p-1 !px-2"
+                key={key}
+                value={data.value}
+                sx={{
+                  fontSize: { xs: "12px", md: "13px" },
+                  color: props.value === data.value ? "white" : "inherit",
+                  backgroundColor:
+                    props.value === data.value ? "#1C64F2" : "#1c64f24d",
+                  "&:hover": {
+                    backgroundColor: "#1c64f24d",
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#1C64F2",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#1654C0",
+                    },
+                  },
+                }}
+              >
+                {data.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </FormControl>
+      )}
+      {props.type === "PurposeDropdown" && (
+        <FormControl
+          fullWidth
+          sx={{
+            mb: { xs: 1, md: 0 },
+            minWidth: { xs: "100%", sm: "auto" },
+          }}
+        >
+          <InputLabel
+            shrink={true}
+            sx={{
+              mb: 0,
+              position: "relative",
+              fontSize: { xs: "0.875rem", md: "1rem" },
+            }}
+          >
+            <span className="text-md">
+              {props.title}{" "}
+              {props.required ? <span className="text-red-700">*</span> : null}
+            </span>
+          </InputLabel>
+
+          <ToggleButtonGroup
+            value={props.value}
+            exclusive
+            onChange={(event, newAlignment) => {
+              props.onChange({
+                target: { name: props.name, value: newAlignment },
+              });
+            }}
+            aria-label="text alignment"
+            sx={{
+              display: "flex",
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              borderRadius: "5px",
+              gap: { xs: 1, sm: 0 },
+              
+            }}
+          >
+            {props.options?.map((data, key) => (
+              <ToggleButton
+                className="!p-1 !px-2 lowercase"
+                key={key}
+                value={data.value}
+                sx={{
+                  lineHeight:"1.3",
+                  fontSize: { xs: "12px", md: "13px" },
+                  color: props.value === data.value ? "white" : "inherit",
+                  backgroundColor:
+                    props.value === data.value ? "#1C64F2" : "#1c64f24d",
+                  "&:hover": {
+                    backgroundColor: "#1c64f24d",
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#1C64F2",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#1654C0",
+                    },
+                  },
+                }}
+              >
+                {data.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </FormControl>
+      )}
+      {props.type === "transactionDropdown" && (
+        <FormControl
+          fullWidth
+          sx={{
+            mb: { xs: 1, md: 0 },
+            minWidth: { xs: "100%", sm: "auto" },
+          }}
+        >
+          <InputLabel
+            shrink={true}
+            sx={{
+              mb: 0,
+              position: "relative",
+              fontSize: { xs: "0.875rem", md: "1rem" },
+            }}
+          >
+            <span className="text-md">
+              {props.title}{" "}
+              {props.required ? <span className="text-red-700">*</span> : null}
+            </span>
+          </InputLabel>
+
+          <ToggleButtonGroup
+            value={props.value}
+            exclusive
+            onChange={(event, newAlignment) => {
+              props.onChange({
+                target: { name: props.name, value: newAlignment },
+              });
+            }}
+            aria-label="text alignment"
+            sx={{
+              display: "flex",
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              borderRadius: "5px",
+              gap: { xs: 1, sm: 0 },
+            }}
+          >
+            {props.options?.map((data, key) => (
+              <ToggleButton
+                className="!p-1 !px-2"
+                key={key}
+                value={data.value}
+                sx={{
+                  fontSize: { xs: "12px", md: "13px" },
+                  color: props.value === data.value ? "white" : "inherit",
+                  backgroundColor:
+                    props.value === data.value ? "#1C64F2" : "#1c64f24d",
+                  "&:hover": {
+                    backgroundColor: "#1c64f24d",
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#1C64F2",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#1654C0",
+                    },
+                  },
+                }}
+              >
+                {data.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </FormControl>
+      )}
+
       {props.type === "fileUpload" && (
         <>
           <Input
@@ -119,41 +389,6 @@ const Fields = (props) => {
           </FormControl>
         </>
       )}
-      {/* //occasion drop down  */}
-      {/* {props.type === "occasionDropdown" && (
-        <>
-          <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                {props.title}
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              name={props.name}
-              value={
-                props.options?.some(
-                  (option) => option.occasion_name == props.value
-                )
-                  ? props.value
-                  : ""
-              }
-              label={props.title}
-              onChange={props.onchange}
-              {...props}
-              required={props.required === true || props.required === "true"}
-            >
-              {props.options?.map((data) => (
-                <MenuItem key={data.occasion_name} value={data.occasion_name}>
-                  {data.occasion_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </>
-      )} */}
 
       {props.type === "occasionDropdown" && (
         <FormControl fullWidth>
@@ -189,20 +424,23 @@ const Fields = (props) => {
       {/* //Family DROP DOWN  */}
       {props.type === "familyDropdown" && (
         <>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={props.sx}>
             <InputLabel id="service-select-label">
               <span className="text-sm relative bottom-[6px]">
                 {props.title} <span className="text-red-700">*</span>
               </span>
             </InputLabel>
             <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
+              sx={{
+                height: "40px",
+                borderRadius: "5px",
+              }}
               labelId="service-select-label"
               id="service-select"
               name={props.name}
               value={props.value}
               label={props.title}
-              onChange={props.onchange}
+              onChange={props.onChange}
               {...props}
               required={props.required === true || props.required === "true"}
             >
@@ -531,10 +769,10 @@ const Fields = (props) => {
             value={
               props.value !== null &&
               props.options?.some(
-                (option) => option.purchase_sub_item === props.value 
+                (option) => option.purchase_sub_item === props.value
               )
                 ? props.value
-                : "" 
+                : ""
             }
             label={props.title}
             onChange={props.onchange}
