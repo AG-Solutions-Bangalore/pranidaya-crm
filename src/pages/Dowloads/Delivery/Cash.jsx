@@ -8,8 +8,8 @@ import { Card } from "@material-tailwind/react";
 import Moment from "moment";
 import { useState, useEffect } from "react";
 import { BaseUrl } from "../../../base/BaseUrl";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-hot-toast";
+// import "react-hot-toast/dist/ReactToastify.css";
 import axios from "axios";
 import DownloadCommon from "../../download/DeliveryDownload";
 
@@ -172,7 +172,7 @@ function Cash() {
   return (
     <Layout>
       <DownloadCommon />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="mt-4 mb-6">
         <PageTitle
           title={"Download Donation Receipts"}

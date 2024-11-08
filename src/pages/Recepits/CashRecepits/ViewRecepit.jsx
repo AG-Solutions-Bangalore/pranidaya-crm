@@ -290,10 +290,14 @@ function ViewCashRecepit() {
 
                 <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
                   <strong>On Account of:</strong>
-                  <p className="text-black font-bold text-sm ml-2">
-                    {recepitsub[0]?.c_receipt_sub_donation_type} -{" "}
-                    {recepitsub[0]?.c_receipt_sub_amount}
-                  </p>
+                  {recepitsub.map((item, index) => (
+                    <div key={index} className="flex items-center">
+                      <p className="text-black font-bold text-sm ml-2">
+                        {item.c_receipt_sub_donation_type} -{" "}
+                        {item.c_receipt_sub_amount},
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">

@@ -74,26 +74,35 @@ const Fields = (props) => {
           </InputLabel>
 
           <ToggleButtonGroup
-            value={props.value}
+            // value={props.value}
+            value={props.value || "No"} // Set default value as "No" if props.value is undefined
             exclusive
+            // onChange={(event, newValue) => {
+            //   if (newValue !== null) {
+            //     props.onChange(newValue);
+            //   }
+            // }}
             onChange={(event, newAlignment) => {
-              props.onChange({
-                target: { name: props.name, value: newAlignment },
-              });
+              if (newAlignment !== null) {
+                props.onChange({
+                  target: { name: props.name, value: newAlignment },
+                });
+              }
             }}
             aria-label="text alignment"
             sx={{
               // display: "flex",
               flexWrap: { xs: "wrap", sm: "nowrap" },
               borderRadius: "5px",
-              gap: { xs: 1, sm: 0 },
+              // gap: { xs: 1, sm: 0 },
             }}
           >
             {props.options?.map((data, key) => (
               <ToggleButton
-                className="!p-1 !px-2"
+                className="!p-1 !px-2 !mr-2 flex justify-center"
                 key={key}
                 value={data.value}
+                defaultValue={"No"}
                 sx={{
                   fontSize: { xs: "12px", md: "13px" },
                   color: props.value === data.value ? "white" : "inherit",
@@ -122,7 +131,7 @@ const Fields = (props) => {
           fullWidth
           sx={{
             mb: { xs: 1, md: 0 },
-            minWidth: { xs: "100%", sm: "auto" },
+            minWidth: { xs: "100%", sm: "100%" },
           }}
         >
           <InputLabel
@@ -140,6 +149,7 @@ const Fields = (props) => {
           </InputLabel>
 
           <ToggleButtonGroup
+            required
             value={props.value}
             exclusive
             onChange={(event, newAlignment) => {
@@ -152,14 +162,15 @@ const Fields = (props) => {
               display: "flex",
               flexWrap: { xs: "wrap", sm: "nowrap" },
               borderRadius: "5px",
-              gap: { xs: 1, sm: 0 },
+              // gap: { xs: 1, sm: 0 },
             }}
           >
             {props.options?.map((data, key) => (
               <ToggleButton
-                className="!p-1 !px-2"
+                className="!p-1 md:!px-3 md:!w-full "
                 key={key}
                 value={data.value}
+                req
                 sx={{
                   fontSize: { xs: "12px", md: "13px" },
                   color: props.value === data.value ? "white" : "inherit",
@@ -191,6 +202,7 @@ const Fields = (props) => {
             minWidth: { xs: "100%", sm: "auto" },
           }}
         >
+          {/* {props.indexId == "1" && ( */}
           <InputLabel
             shrink={true}
             sx={{
@@ -204,7 +216,7 @@ const Fields = (props) => {
               {props.required ? <span className="text-red-700">*</span> : null}
             </span>
           </InputLabel>
-
+          {/* )} */}
           <ToggleButtonGroup
             value={props.value}
             exclusive
@@ -218,17 +230,17 @@ const Fields = (props) => {
               display: "flex",
               flexWrap: { xs: "wrap", sm: "nowrap" },
               borderRadius: "5px",
-              gap: { xs: 1, sm: 0 },
-              
+              // gap: { xs: 1, sm: 0 },
             }}
           >
             {props.options?.map((data, key) => (
               <ToggleButton
+                required={props.required}
                 className="!p-1 !px-2 lowercase"
                 key={key}
                 value={data.value}
                 sx={{
-                  lineHeight:"1.3",
+                  lineHeight: "1.3",
                   fontSize: { xs: "12px", md: "13px" },
                   color: props.value === data.value ? "white" : "inherit",
                   backgroundColor:
@@ -274,6 +286,7 @@ const Fields = (props) => {
           </InputLabel>
 
           <ToggleButtonGroup
+            required={props.required}
             value={props.value}
             exclusive
             onChange={(event, newAlignment) => {
@@ -286,12 +299,13 @@ const Fields = (props) => {
               display: "flex",
               flexWrap: { xs: "wrap", sm: "nowrap" },
               borderRadius: "5px",
-              gap: { xs: 1, sm: 0 },
+              // gap: { xs: 1, sm: 0 },
             }}
           >
             {props.options?.map((data, key) => (
               <ToggleButton
-                className="!p-1 !px-2"
+                required={props.required}
+                className="!p-1 !px-2 md:!w-full"
                 key={key}
                 value={data.value}
                 sx={{
@@ -425,7 +439,7 @@ const Fields = (props) => {
       {props.type === "familyDropdown" && (
         <>
           <FormControl fullWidth sx={props.sx}>
-            <InputLabel id="service-select-label">
+            <InputLabel id="service-select-label" className="mt-2">
               <span className="text-sm relative bottom-[6px]">
                 {props.title} <span className="text-red-700">*</span>
               </span>
@@ -434,6 +448,7 @@ const Fields = (props) => {
               sx={{
                 height: "40px",
                 borderRadius: "5px",
+                marginTop: "12px",
               }}
               labelId="service-select-label"
               id="service-select"

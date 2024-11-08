@@ -530,7 +530,7 @@ const DonorDonationReceipt = () => {
             {users.map((user, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4"
+                className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4"
               >
                 <div className="md:col-span-2">
                   <Fields
