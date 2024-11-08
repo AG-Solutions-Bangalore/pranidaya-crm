@@ -449,6 +449,9 @@ const EditRecepit = () => {
                   onChange={(e) => onInputChange(e)}
                   disabled
                   className="disabled:opacity-50"
+                  labelProps={{
+                    className: "!text-gray-500",
+                  }}
                 />
               </div>
               <div className="md:col-span-1">
@@ -580,17 +583,12 @@ const EditRecepit = () => {
             <div className="flex justify-center mt-4 space-x-4">
               <Button
                 type="submit"
-             
                 disabled={isButtonDisabled}
                 className="mt-4 bg-blue-400"
               >
                 Update
               </Button>
-              <Button
-          
-                className="mt-4 bg-red-400"
-                onClick={handleBackButton}
-              >
+              <Button className="mt-4 bg-red-400" onClick={handleBackButton}>
                 Back
               </Button>
             </div>

@@ -4,10 +4,10 @@ import { MdKeyboardBackspace, MdDelete } from "react-icons/md";
 import axios from "axios";
 import Layout from "../../layout/Layout";
 import Fields from "../../components/common/TextField/TextField";
-import { toast } from "react-toastify";
+import { toast, Toaster } from "react-hot-toast";
 import { BaseUrl } from "../../base/BaseUrl";
 import moment from "moment/moment";
-import { Button, Card, CardBody, Input } from "@material-tailwind/react";
+import { Button, Input } from "@material-tailwind/react";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -219,13 +219,13 @@ const DonorDonationReceipt = () => {
     c_receipt_remarks: "",
     c_manual_receipt_no: "",
     c_receipt_sub_data: "",
-    family_full_check: "",
+    family_full_check: "No",
     family_full_name: "",
   });
 
   const useTemplate = {
     c_receipt_sub_donation_type: "",
-    c_receipt_sub_amount: "0",
+    c_receipt_sub_amount: "",
   };
 
   const [users, setUsers] = useState([useTemplate]);
@@ -233,6 +233,7 @@ const DonorDonationReceipt = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   //FETCH OCCASION
   const [occasion, setOccasion] = useState([]);
+
   useEffect(() => {
     var theLoginToken = localStorage.getItem("token");
     const requestOptions = {
@@ -275,6 +276,16 @@ const DonorDonationReceipt = () => {
     }
   }, [todayback]);
 
+
+
+  const isAddMoreDisabled = () => {
+    return users.some(
+      (item) =>
+        item.c_receipt_sub_donation_type === "" ||
+        item.c_receipt_sub_amount === ""
+    );
+  };
+
   const addItem = () => {
     setUsers([...users, useTemplate]);
     setCount(fabric_inward_count + 1);
@@ -288,6 +299,7 @@ const DonorDonationReceipt = () => {
   };
 
   const onInputChange = (e) => {
+    console.log(e.target.value);
     if (e.target.name == "c_receipt_total_amount") {
       if (validateOnlyDigits(e.target.value)) {
         setDonor({
@@ -357,8 +369,85 @@ const DonorDonationReceipt = () => {
       )
     );
   };
+  // const onSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   let data = {
+  //     donor_fts_id: userdata.donor_fts_id,
+  //     c_receipt_financial_year: currentYear,
+  //     c_receipt_date: check ? dayClose : dayClose,
+  //     c_receipt_exemption_type: donor.c_receipt_exemption_type,
+  //     c_receipt_total_amount: donor.c_receipt_total_amount,
+  //     c_receipt_count: fabric_inward_count,
+  //     c_receipt_tran_pay_mode: donor.c_receipt_tran_pay_mode,
+  //     c_receipt_tran_pay_details: donor.c_receipt_tran_pay_details,
+  //     c_receipt_occasional: donor.c_receipt_occasional,
+  //     c_receipt_remarks: donor.c_receipt_remarks,
+  //     c_receipt_reason: donor.c_receipt_reason,
+  //     c_receipt_email_count: donor.c_receipt_email_count,
+  //     c_manual_receipt_no: donor.c_manual_receipt_no,
+  //     c_receipt_sub_data: users,
+  //     family_full_check: donor.family_full_check,
+  //     family_full_name: donor.family_full_name,
+  //   };
+
+  //   const isValid = document.getElementById("addIndiv").checkValidity();
+
+  //   if (isValid) {
+  //     setIsButtonDisabled(true);
+
+  //     axios
+  //       .post(`${BaseUrl}/create-c-receipt`, data, {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         if (res.status == 200 || res.data.code == "200") {
+  //           toast.success("Donor Created Successfully");
+  //           setTimeout(() => {
+  //             navigate(`/recepit-view/${res.data?.latestid?.id}`);
+  //           }, 100);
+  //         } else {
+  //           toast.error(res.data.message || "Error occurred");
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         // Improved error logging
+  //         if (err.response) {
+  //           toast.error(
+  //             `Error: ${
+  //               err.response.data.message || "An error occurred on the server"
+  //             }`
+  //           );
+  //           console.error("Server Error:", err.response);
+  //         } else if (err.request) {
+  //           toast.error("No response from the server.");
+  //           console.error("No Response:", err.request);
+  //         } else {
+  //           toast.error(`Error: ${err.message}`);
+  //           console.error("Error Message:", err.message);
+  //         }
+  //       })
+  //       .finally(() => {
+  //         setIsButtonDisabled(false);
+  //       });
+  //   }
+  // };
   const onSubmit = (e) => {
     e.preventDefault();
+
+    const requiredFields = [
+      { field: donor.c_receipt_exemption_type, name: "Category" },
+      { field: donor.c_receipt_tran_pay_mode, name: "Transaction Type" },
+    ];
+
+    const emptyFields = requiredFields.filter((item) => !item.field);
+
+    if (emptyFields.length > 0) {
+      emptyFields.forEach((item) => toast.error(`Please select ${item.name}`));
+      return;
+    }
 
     let data = {
       donor_fts_id: userdata.donor_fts_id,
@@ -391,15 +480,16 @@ const DonorDonationReceipt = () => {
           },
         })
         .then((res) => {
-          if (res.status == 200 && res.data.code == "200") {
-            toast.success(res.data.msg || "Donor Created Successfully");
-            navigate(`/recepit-view/${res.data?.latestid?.id}`);
+          if (res.status === 200 || res.data.code === "200") {
+            toast.success("Donor Created Successfully");
+            setTimeout(() => {
+              navigate(`/recepit-view/${res.data?.latestid?.id}`);
+            }, 100);
           } else {
             toast.error(res.data.message || "Error occurred");
           }
         })
         .catch((err) => {
-          // Improved error logging
           if (err.response) {
             toast.error(
               `Error: ${
@@ -519,6 +609,7 @@ const DonorDonationReceipt = () => {
   };
   return (
     <Layout>
+      <Toaster position="top-right" reverseOrder={false} />
       <div>
         <div className="flex flex-col md:flex-row items-center justify-between mb-4 mt-6">
           <div className="flex items-center">
@@ -549,7 +640,7 @@ const DonorDonationReceipt = () => {
             ) : (
               <Button
                 onClick={dayClose === todayback ? null : (e) => onDayClose(e)}
-                className="btn-get-started"
+                className="btn-get-started bg-red-400"
               >
                 + Day Close
               </Button>
@@ -558,8 +649,10 @@ const DonorDonationReceipt = () => {
         </div>
         <div className="p-4 ">
           <div className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-3  lg:grid-cols-4 gap-4 ">
-              <div className="text-gray-700">{userdata.donor_full_name}</div>
+            <div className="grid grid-cols-1 md:grid-cols-3  lg:grid-cols-6 gap-4 ">
+              <div className="text-gray-700 md:col-span-2">
+                {userdata.donor_full_name}
+              </div>
               <div className="text-gray-700">
                 {" "}
                 <strong>PDS Id:</strong> {userdata.donor_fts_id}
@@ -568,7 +661,7 @@ const DonorDonationReceipt = () => {
                 {" "}
                 <strong>Pan No:</strong> {pan}
               </div>
-              <div className="text-gray-700">
+              <div className="text-gray-700 md:col-span-2">
                 <strong>Receipt Date:</strong>{" "}
                 {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")} (
                 {finalyear})
@@ -587,8 +680,8 @@ const DonorDonationReceipt = () => {
         </div>
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-4">
+              <div className="w-full md:col-span-2 ">
                 <Fields
                   type="newwhatsappDropdown"
                   title="Category"
@@ -600,14 +693,14 @@ const DonorDonationReceipt = () => {
                 />
               </div>
 
-              <div>
+              <div className="md:col-span-2">
                 <Fields
                   type="transactionDropdown"
                   title="Transaction Type"
                   required={true}
                   options={
-                    donor.receipt_exemption_type == "80G" &&
-                    donor.receipt_total_amount > 2000
+                    donor.c_receipt_exemption_type == "80G" &&
+                    donor.c_receipt_total_amount > 2000
                       ? pay_mode_2
                       : pay_mode
                   }
@@ -616,7 +709,7 @@ const DonorDonationReceipt = () => {
                   onChange={(e) => onInputChange(e)}
                 />
               </div>
-              <div className="flex">
+              <div className="flex md:col-span-2 ">
                 <Fields
                   type="familyDropdowns"
                   title="Family Member"
@@ -631,7 +724,7 @@ const DonorDonationReceipt = () => {
                 {donor.family_full_check == "Yes" ? (
                   <Fields
                     select
-                    title="Family Member Name"
+                    title="Family Member "
                     type="familyDropdown"
                     name="family_full_name"
                     value={donor.family_full_name}
@@ -639,26 +732,14 @@ const DonorDonationReceipt = () => {
                     options={userfamilydata}
                     className="inline "
                     size="small"
-                    sx={{ marginTop: { md: "10px" } }}
                   />
                 ) : (
                   ""
                 )}
               </div>
-              <div className="md:mt-4">
-                <Fields
-                  select
-                  title="On Occasion"
-                  type="occasionDropdown"
-                  name="c_receipt_occasional"
-                  value={donor.c_receipt_occasional}
-                  onChange={(e) => onInputChange(e)}
-                  options={occasion}
-                />
-              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 md:my-5 ">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 md:my-5 ">
               <div>
                 <Fields
                   type="textField"
@@ -687,7 +768,7 @@ const DonorDonationReceipt = () => {
                   label="Remarks"
                 />
               </div>
-              <div>
+              {/* <div>
                 <Input
                   type="text"
                   label="Total Amount"
@@ -704,6 +785,18 @@ const DonorDonationReceipt = () => {
                       : "label-inactive"
                   } text-sm text-gray-500`}
                 />
+              </div> */}
+
+              <div>
+                <Fields
+                  select
+                  title="On Occasion"
+                  type="occasionDropdown"
+                  name="c_receipt_occasional"
+                  value={donor.c_receipt_occasional}
+                  onChange={(e) => onInputChange(e)}
+                  options={occasion}
+                />
               </div>
             </div>
 
@@ -711,10 +804,10 @@ const DonorDonationReceipt = () => {
             {users.map((user, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4"
+                className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 mb-4 gap-4"
               >
-                <div className="md:col-span-3 w-full md:w-auto">
-                  <Fields
+                <div className="md:col-span-4 md:w-auto">
+                  {/* <Fields
                     type="PurposeDropdown"
                     title="Purpose"
                     required={true}
@@ -723,17 +816,26 @@ const DonorDonationReceipt = () => {
                         ? donation_type_2
                         : donation_type
                     }
+                    indexId={fabric_inward_count}
                     name="c_receipt_sub_donation_type"
-                    // value={donor.c_receipt_sub_donation_type}
-                    // onChange={(e) => {
-                    //   onChange(e, index);
-                    // }}
                     value={users[index].c_receipt_sub_donation_type}
                     onChange={(e) => handlePurposeChange(e, index)}
-                  />
+                  /> */}
+                  <Fields
+                    required
+                    select
+                    title="Purpose"
+                    type="TransactionType1"
+                    name="c_receipt_sub_donation_type"
+                    value={donor.c_receipt_sub_donation_type}
+                    onChange={(e) => onChange(e, index)}
+                    donor={donor}
+                    donation_type={donation_type}
+                    donation_type_2={donation_type_2}
+                  ></Fields>
                 </div>
 
-                <div className="md:col-span-2 md:mt-6">
+                <div>
                   <Input
                     required
                     label="Amount"
@@ -747,43 +849,54 @@ const DonorDonationReceipt = () => {
                   />
                 </div>
 
-                <button
-                  color="error"
-                  onClick={() => removeUser(index)}
-                  className="flex items-center justify-left text-2xl  text-red-600 md:mt-4"
-                  aria-label="Delete"
-                >
-                  {" "}
-                  <MdDelete />
-                </button>
+                <div className="md:col-span-0.1 flex items-center justify-start md:ml-4">
+                  <button
+                    color="error"
+                    onClick={() => removeUser(index)}
+                    className="text-2xl text-red-600"
+                    aria-label="Delete"
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
               </div>
             ))}
 
-            <div className="display-flex justify-start">
+            <div className="flex justify-start space-x-2">
               <Button
                 // color="primary"
                 onClick={addItem}
-                className="mt-4 bg-blue-400"
+                className="mt-4 bg-blue-400 flex "
+                disabled={isAddMoreDisabled()}
               >
                 Add More
               </Button>
+
+              <div className="w-56 mt-4 ">
+                <Input
+                  type="text"
+                  label="Total Amount"
+                  name="m_receipt_total_amount"
+                  value={donor?.c_receipt_total_amount || ""}
+                  onChange={(e) => onInputChange(e)}
+                  disabled
+                  labelProps={{
+                    className: "!text-gray-900",
+                  }}
+                  className=" text-lg"
+                />
+              </div>
             </div>
+
             <div className="flex justify-center mt-4 space-x-4">
               <Button
                 type="submit"
-                // variant="contained"
-                // color="primary"
                 disabled={isButtonDisabled}
                 className="mt-4  bg-blue-400"
               >
                 Submit
               </Button>
-              <Button
-                // variant="contained"
-                // color="secondary"
-                className="mt-4 bg-red-400"
-                onClick={handleBackButton}
-              >
+              <Button className="mt-4 bg-red-400" onClick={handleBackButton}>
                 Back
               </Button>
             </div>

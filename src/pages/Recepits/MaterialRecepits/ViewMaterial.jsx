@@ -102,9 +102,7 @@ function ViewMaterialRecepit() {
             navigate("/donor-list");
           }}
         >
-          <Button color="red">
-            Add New Recepit
-          </Button>
+          <Button color="red">Add New Recepit</Button>
         </div>
       </div>
       {receipts && (
@@ -224,13 +222,25 @@ function ViewMaterialRecepit() {
                   </div>
                 </div>
 
-                <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
+                {/* <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
                   <strong>In Account of:</strong>
                   <p className="text-black font-bold text-sm ml-2">
                     {recepitsub[0]?.purchase_sub_item} -{" "}
                     {recepitsub[0]?.purchase_sub_qnty}
                     {recepitsub[0]?.purchase_sub_unit}
                   </p>
+                </div> */}
+
+                <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
+                  <strong>On Account of:</strong>
+                  {recepitsub.map((item, index) => (
+                    <div key={index} className="flex items-center">
+                      <p className="text-black font-bold text-sm ml-2">
+                        {item.purchase_sub_item} - {item.purchase_sub_qnty},
+                        {item.purchase_sub_unit},
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
