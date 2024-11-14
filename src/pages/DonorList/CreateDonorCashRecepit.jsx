@@ -276,8 +276,6 @@ const DonorDonationReceipt = () => {
     }
   }, [todayback]);
 
-
-
   const isAddMoreDisabled = () => {
     return users.some(
       (item) =>
@@ -680,7 +678,7 @@ const DonorDonationReceipt = () => {
         </div>
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-4">
               <div className="w-full md:col-span-2 ">
                 <Fields
                   type="newwhatsappDropdown"
@@ -737,9 +735,79 @@ const DonorDonationReceipt = () => {
                   ""
                 )}
               </div>
+            </div> */}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
+              <div className="w-full col-span-1 sm:col-span-2 lg:col-span-2">
+                <Fields
+                  type="newwhatsappDropdown"
+                  title="Category"
+                  name="c_receipt_exemption_type"
+                  value={donor.c_receipt_exemption_type}
+                  onChange={(e) => onInputChange(e)}
+                  required={true}
+                  options={exemption}
+                />
+              </div>
+
+              <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+                <Fields
+                  type="transactionDropdown"
+                  title="Transaction Type"
+                  required={true}
+                  options={
+                    donor.c_receipt_exemption_type === "80G" &&
+                    donor.c_receipt_total_amount > 2000
+                      ? pay_mode_2
+                      : pay_mode
+                  }
+                  name="c_receipt_tran_pay_mode"
+                  value={donor.c_receipt_tran_pay_mode}
+                  onChange={(e) => onInputChange(e)}
+                />
+              </div>
+
+              <div className="col-span-1 sm:col-span-2 lg:col-span-2 flex flex-col sm:flex-row gap-4">
+                <Fields
+                  type="familyDropdowns"
+                  title="Family Member"
+                  required={true}
+                  name="family_full_check"
+                  value={donor.family_full_check}
+                  onChange={(e) => onInputChange(e)}
+                  options={family_check}
+                  className="flex-1"
+                />
+
+                {donor.family_full_check === "Yes" && (
+                  <Fields
+                    select
+                    title="Family Member"
+                    type="familyDropdown"
+                    name="family_full_name"
+                    value={donor.family_full_name}
+                    onChange={(e) => onInputChange(e)}
+                    options={userfamilydata}
+                    className="flex-1"
+                    size="small"
+                  />
+                )}
+              </div>
+
+              <div className="col-span-1 sm:col-span-2 lg:col-span-2 sm:mt-4">
+                <Fields
+                  select
+                  title="On Occasion"
+                  type="occasionDropdown"
+                  name="c_receipt_occasional"
+                  value={donor.c_receipt_occasional}
+                  onChange={(e) => onInputChange(e)}
+                  options={occasion}
+                />
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 md:my-5 ">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 md:my-5 ">
               <div>
                 <Fields
                   type="textField"
@@ -768,59 +836,16 @@ const DonorDonationReceipt = () => {
                   label="Remarks"
                 />
               </div>
-              {/* <div>
-                <Input
-                  type="text"
-                  label="Total Amount"
-                  name="m_receipt_total_amount"
-                  value={donor?.c_receipt_total_amount || ""}
-                  onChange={(e) => onInputChange(e)}
-                  disabled
-                  labelProps={{
-                    className: "!text-gray-500",
-                  }}
-                  className={`${
-                    donor?.c_receipt_total_amount
-                      ? "label-active"
-                      : "label-inactive"
-                  } text-sm text-gray-500`}
-                />
-              </div> */}
-
-              <div>
-                <Fields
-                  select
-                  title="On Occasion"
-                  type="occasionDropdown"
-                  name="c_receipt_occasional"
-                  value={donor.c_receipt_occasional}
-                  onChange={(e) => onInputChange(e)}
-                  options={occasion}
-                />
-              </div>
             </div>
 
             {/* Line Items */}
-            {users.map((user, index) => (
+            {/* {users.map((user, index) => (
               <div
                 key={index}
                 className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 mb-4 gap-4"
               >
                 <div className="md:col-span-4 md:w-auto">
-                  {/* <Fields
-                    type="PurposeDropdown"
-                    title="Purpose"
-                    required={true}
-                    options={
-                      donor?.receipt_exemption_type == "80G"
-                        ? donation_type_2
-                        : donation_type
-                    }
-                    indexId={fabric_inward_count}
-                    name="c_receipt_sub_donation_type"
-                    value={users[index].c_receipt_sub_donation_type}
-                    onChange={(e) => handlePurposeChange(e, index)}
-                  /> */}
+               
                   <Fields
                     required
                     select
@@ -849,7 +874,54 @@ const DonorDonationReceipt = () => {
                   />
                 </div>
 
-                <div className="md:col-span-0.1 flex items-center justify-start md:ml-4">
+                <div className="md:col-span-0.1 flex items-center justify-start lg:ml-12">
+                  <button
+                    color="error"
+                    onClick={() => removeUser(index)}
+                    className="text-2xl text-red-600"
+                    aria-label="Delete"
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
+              </div>
+            ))} */}
+
+            {users.map((user, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-4"
+              >
+                <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+                  <Fields
+                    required
+                    select
+                    title="Purpose"
+                    type="TransactionType1"
+                    name="c_receipt_sub_donation_type"
+                    value={user.c_receipt_sub_donation_type}
+                    onChange={(e) => onChange(e, index)}
+                    donor={user}
+                    donation_type={donation_type}
+                    donation_type_2={donation_type_2}
+                  />
+                </div>
+
+                <div className="col-span-1 sm:col-span-1">
+                  <Input
+                    required
+                    label="Amount"
+                    type="number"
+                    value={user.c_receipt_sub_amount}
+                    name="c_receipt_sub_amount"
+                    onChange={(e) => {
+                      onChange(e, index);
+                      AmountCal(index);
+                    }}
+                  />
+                </div>
+
+                <div className="flex items-center  justify-start lg:justify-center col-span-2 ">
                   <button
                     color="error"
                     onClick={() => removeUser(index)}
@@ -864,7 +936,6 @@ const DonorDonationReceipt = () => {
 
             <div className="flex justify-start space-x-2">
               <Button
-                // color="primary"
                 onClick={addItem}
                 className="mt-4 bg-blue-400 flex "
                 disabled={isAddMoreDisabled()}
