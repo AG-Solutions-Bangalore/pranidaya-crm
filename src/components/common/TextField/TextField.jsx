@@ -167,7 +167,7 @@ const Fields = (props) => {
           >
             {props.options?.map((data, key) => (
               <ToggleButton
-                className="!p-1 md:!px-3 md:!w-full "
+                className="!p-1 md:!px-3 sm:!w-full "
                 key={key}
                 value={data.value}
                 req
@@ -194,6 +194,7 @@ const Fields = (props) => {
           </ToggleButtonGroup>
         </FormControl>
       )}
+      
       {props.type === "PurposeDropdown" && (
         <FormControl
           fullWidth
@@ -305,7 +306,7 @@ const Fields = (props) => {
             {props.options?.map((data, key) => (
               <ToggleButton
                 required={props.required}
-                className="!p-1 !px-2 md:!w-full"
+                className="!p-1 !sm:!px-2 sm:!w-full"
                 key={key}
                 value={data.value}
                 sx={{

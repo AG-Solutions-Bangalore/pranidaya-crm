@@ -37,7 +37,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
     { name: "Home", link: "/home" },
     ...pathSegments.slice(0, 1).map((segment, index) => ({
       name: segment.charAt(0).toUpperCase() + segment.slice(1),
-      link: `/home/${segment}`,  
+      link: `/home/${segment}`,
     })),
   ];
 
@@ -79,14 +79,11 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
               </Link>
             ))}
           </Breadcrumbs>
-          <Typography variant="h6" color="white">
+          {/* <Typography variant="h6" color="white">
             {pageTitle}
-          </Typography>
+          </Typography> */}
         </div>
         <div className="flex items-center">
-          {/* Search and other elements can be added here */}
-
-          {/* Sidebar toggle button for mobile view */}
           <IconButton
             variant="text"
             color="white"
@@ -112,14 +109,9 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                   Profile
                 </Link>
               </MenuItem>
-              {/* <MenuItem>
-                <Link to="/change-password" className="text-black">
-                  Change Password
-                </Link>
-              </MenuItem> */}
             </MenuList>
           </Menu>
-          {/* Settings icon */}
+
           <IconButton variant="text" color="red" onClick={handleOpenLogout}>
             <HiArrowRightStartOnRectangle className="h-5 w-5 text-red" />
           </IconButton>

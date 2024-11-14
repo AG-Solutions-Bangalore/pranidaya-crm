@@ -5,11 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { BaseUrl } from "../../base/BaseUrl";
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
-import { MdEdit, MdShoppingBasket } from "react-icons/md";
+import { MdEdit, MdOutlineStickyNote2, MdShoppingBasket } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
 import { BiAbacus } from "react-icons/bi";
 import { FaUsers } from "react-icons/fa";
 import CommonListing from "./CommonListing";
+import { PiNotebook } from "react-icons/pi";
 
 const DonorList = () => {
   const [donorListData, setDonorListData] = useState(null);
@@ -128,21 +129,21 @@ const DonorList = () => {
               <IoEye
                 onClick={() => navigate(`/viewdonor-list/${id}`)}
                 title="View "
-                className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
+                className="h-5 w-5 cursor-pointer text-blue-500 "
               />
 
               <MdEdit
                 onClick={() => navigate(`/edit-donor/${id}`)}
                 title="Edit"
-                className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
+                className="h-5 w-5 cursor-pointer text-blue-500 "
               />
 
-              <BiAbacus
+              <PiNotebook
                 onClick={() => navigate(`/createrecepit-donor/${id}`)}
                 title="Cash Recepit"
                 className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
               />
-              <MdShoppingBasket
+              <MdOutlineStickyNote2
                 onClick={() => navigate(`/create-donor/${id}`)}
                 title="Material Recepit"
                 className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
