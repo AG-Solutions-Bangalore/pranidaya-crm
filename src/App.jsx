@@ -86,31 +86,18 @@ const App = () => {
         <Route path="/master-list" element={<OpenListEnquiry />} />
         <Route path="/add-enquiry" element={<AddEnquiry />} />
         <Route path="/edit-enquiry/:id" element={<EditList />} />
-        {/* <Route path="/edit-personal/:id" element={<EditPersonalDetails />} /> */}
-        {/* <Route path="/view-enquiry/:id" element={<ViewEnquiry />} /> */}
         <Route path="/occasion" element={<ListOccasion />} />
         <Route path="/add-occasion" element={<AddOccasion />} />
         <Route path="/edit-occasion/:id" element={<EditOccasion />} />
-        {/* //chnage */}
-        {/* <Route path="/closeList-enquiry" element={<CloseListEnquiry />} /> */}
         <Route path="/addVendor" element={<AddVendors />} />
         <Route path="/purchase" element={<PurchaseList />} />
-        {/* <Route path="/add-delivery" element={<AddDelivery />} /> */}
-        {/* <Route path="/edit-delivery/:id" element={<EditDelivery />} /> */}
         <Route path="/consumption" element={<Consumption />} />
-        {/* <Route path="/view-student-delivery/:id" element={<View />} /> */}
-        {/* class  */}
-        {/* request  */}
         <Route path="/cashrecepit" element={<RecepitCashRecepit />} />
-        {/* <Route path="/add-request" element={<AddRequest />} /> */}
         <Route path="recepit-material" element={<MaterialRecepits />} />
-        {/* <Route path="/request-completed" element={<CompletedListRequest />} /> */}
         {/* Reports  */}
         <Route path="/stock-summary" element={<PendingListTask />} />
         <Route path="/d-summary" element={<DonationSummary />} />
         <Route path="/d-summary-view" element={<DonationSummaryView />} />
-        {/* <Route path="/task-inspection" element={<InspectionListTask />} /> */}
-        {/* <Route path="/task-completed" element={<CompletedListTask />} /> */}
         <Route path="/view-stock" element={<ViewStockSummary />} />
         <Route path="/download-enquiry" element={<EnquiryDownload />} />
         <Route
@@ -136,22 +123,6 @@ const App = () => {
           path="/D-consumption"
           element={<ProtectedRoute element={<DowloadConsumption />} />}
         />
-        {/* <Route
-          path="/enquiryreport"
-          element={<ProtectedRoute element={<EnquiryReport />} />}
-        /> */}
-        {/* <Route
-          path="/studentreport"
-          element={<ProtectedRoute element={<StudentReport />} />}
-        /> */}
-        {/* <Route
-          path="/deliveryreport"
-          element={<ProtectedRoute element={<DeliveryReport />} />}
-        /> */}
-        {/* <Route
-          path="/material-recepitreport"
-          element={<ProtectedRoute element={<ExamReport />} />}
-        /> */}
         {/* ///NEW  */}
         <Route
           path="/VendorList"

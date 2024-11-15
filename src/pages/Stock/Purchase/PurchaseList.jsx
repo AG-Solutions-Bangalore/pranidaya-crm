@@ -156,7 +156,7 @@ const PurchaseList = () => {
         <Link
           to="/add-purchase"
           className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-          style={{ display: usertype == 2 ? "inline-block" : "none" }}
+          // style={{ display: usertype == 2 ? "inline-block" : "none" }}
         >
           + Add Purchase
         </Link>
