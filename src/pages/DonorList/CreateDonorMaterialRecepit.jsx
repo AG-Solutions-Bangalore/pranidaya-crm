@@ -153,7 +153,7 @@ const DonorDonationReceipt = () => {
 
     const dateField = document.getElementById("datefield");
     if (dateField) {
-      dateField.setAttribute("max", todayback); // Set max attribute for date input
+      dateField.setAttribute("max", todayback);
     }
   }, [todayback]);
 
@@ -291,23 +291,6 @@ const DonorDonationReceipt = () => {
     navigate("/donor-list");
   };
 
-
-
-      //FETCH OCCASION
-      // const [occasion, setOccasion] = useState([]);
-      // useEffect(() => {
-      //   var theLoginToken = localStorage.getItem("token");
-      //   const requestOptions = {
-      //     method: "GET",
-      //     headers: {
-      //       Authorization: "Bearer " + theLoginToken,
-      //     },
-      //   };
-  
-      //   fetch(BaseUrl + "/fetch-occasion", requestOptions)
-      //     .then((response) => response.json())
-      //     .then((data) => setOccasion(data.occasion));
-      // }, []);
   useEffect(() => {
     axios({
       url: BaseUrl + "/fetch-donor-by-id/" + id,
@@ -399,6 +382,14 @@ const DonorDonationReceipt = () => {
       }
     });
   };
+  // const isAddMoreDisabled = () => {
+  //   return users.some(
+  //     (item) =>
+  //       item.m_receipt_sub_item === "" ||
+  //       item.m_receipt_sub_quantity === "" ||
+  //       item.m_receipt_sub_unit === ""
+  //   );
+  // };
   return (
     <Layout>
       <div>
@@ -458,7 +449,7 @@ const DonorDonationReceipt = () => {
                 {finalyear}
               </div>
             </div>
-            {donor.c_receipt_total_amount > 2000 &&
+            {donor.m_receipt_total_amount > 2000 &&
             donor.c_receipt_exemption_type == "80G" &&
             pan == "NA" ? (
               <span className="amounterror">
@@ -578,7 +569,11 @@ const DonorDonationReceipt = () => {
             ))}
 
             <div className="display-flex justify-start ">
-              <Button onClick={addItem} className="mt-4 bg-blue-400">
+              <Button
+                onClick={addItem}
+                className="mt-4 bg-blue-400"
+                // disabled={isAddMoreDisabled()}
+              >
                 Add More
               </Button>
             </div>

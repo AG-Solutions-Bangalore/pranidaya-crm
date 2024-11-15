@@ -196,9 +196,9 @@ const NewsDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Total Donor Count */}
           {results.length !== 0 && (
-            <div className="bg-gray-500 text-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
+            <div className="bg-gray-500 text-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[100px] flex flex-col items-center justify-center">
               <h3 className="text-xl font-bold">Total Donors</h3>
-              <p className="text-5xl font-bold">
+              <p className="text-4xl font-bold">
                 <CountUp
                   start={0}
                   end={results.total_donor_count}
@@ -210,9 +210,9 @@ const NewsDashboard = () => {
 
           {/* Total Website Donation */}
           {results.length !== 0 && (
-            <div className="bg-blue-500 text-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
+            <div className="bg-blue-500 text-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.25)] rounded-md text-center min-h-[100px] flex flex-col items-center justify-center">
               <h3 className="text-xl font-bold">Total Website Donation</h3>
-              <p className="text-5xl font-bold">
+              <p className="text-4xl font-bold">
                 <CountUp
                   start={0}
                   end={results.total_website_donation}
@@ -224,9 +224,9 @@ const NewsDashboard = () => {
 
           {/* Total Material Donation */}
           {results.length !== 0 && (
-            <div className="bg-purple-500 text-white  rounded-md text-center min-h-[150px] flex flex-col items-center justify-center ">
+            <div className="bg-purple-500 text-white  rounded-md text-center min-h-[100px] flex flex-col items-center justify-center ">
               <h3 className="text-xl font-bold">Total Material Donation</h3>
-              <p className="text-5xl font-bold">
+              <p className="text-4xl font-bold">
                 <CountUp
                   start={0}
                   end={results.total_material_donation}
@@ -237,9 +237,9 @@ const NewsDashboard = () => {
           )}
           {/* Total Donation */}
           {results.length !== 0 && (
-            <div className="bg-green-500 text-white  rounded-md text-center min-h-[150px] flex flex-col items-center justify-center">
+            <div className="bg-green-500 text-white  rounded-md text-center min-h-[100px] flex flex-col items-center justify-center">
               <h3 className="text-xl font-bold">Total Donation</h3>
-              <p className="text-5xl font-bold">
+              <p className="text-4xl font-bold">
                 <CountUp
                   start={0}
                   end={results.total_donation}
