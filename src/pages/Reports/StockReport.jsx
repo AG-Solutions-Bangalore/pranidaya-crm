@@ -36,44 +36,46 @@ const PendingListTask = () => {
   return (
     <Layout>
       <TaskManagerFilter />
-      <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
-        <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
-          Stock Summary ( In Kgs )
-        </h3>
-      </div>
-
-      <form id="dowRecp" autoComplete="off">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div className="w-full">
-            <Input
-              type="date"
-              label="From Date "
-              className="required"
-              required
-              name="receipt_from_date"
-              value={downloadStock.receipt_from_date}
-              onChange={(e) => onInputChange(e)}
-            />
-          </div>
-          <div className="w-full">
-            <Input
-              type="date"
-              label="To Date"
-              required
-              className="required"
-              value={downloadStock.receipt_to_date}
-              onChange={(e) => onInputChange(e)}
-              name="receipt_to_date"
-            />
-          </div>
-
-          <div className="w-full">
-            <Button color="blue" fullWidth onClick={onReportView}>
-              View
-            </Button>
-          </div>
+      <div className="bg-white mt-5 p-2 rounded-lg">
+        <div className="flex flex-col md:flex-row justify-between items-center  space-y-4 md:space-y-0">
+          <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
+            Stock Summary ( In Kgs )
+          </h3>
         </div>
-      </form>
+
+        <form id="dowRecp" autoComplete="off" className="my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="w-full">
+              <Input
+                type="date"
+                label="From Date "
+                className="required"
+                required
+                name="receipt_from_date"
+                value={downloadStock.receipt_from_date}
+                onChange={(e) => onInputChange(e)}
+              />
+            </div>
+            <div className="w-full">
+              <Input
+                type="date"
+                label="To Date"
+                required
+                className="required"
+                value={downloadStock.receipt_to_date}
+                onChange={(e) => onInputChange(e)}
+                name="receipt_to_date"
+              />
+            </div>
+
+            <div className="w-full">
+              <Button color="blue" fullWidth onClick={onReportView}>
+                View
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     </Layout>
   );
 };
