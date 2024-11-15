@@ -6,17 +6,17 @@ import SideNav from "../components/SideNav";
 const Layout = ({ children }) => {
   const [openSideNav, setOpenSideNav] = useState(false);
   return (
-    <div className="bg-blue-gray-50/50">
+    <div className="bg-blue-gray-50/50 h-96">
       <SideNav openSideNav={openSideNav} setOpenSideNav={setOpenSideNav} />
-      <div className="p-4 xl:ml-72">
+      <div className="p-4 relative  xl:ml-72">
         <DashboardNavbar
           openSideNav={openSideNav}
           setOpenSideNav={setOpenSideNav}
         />
         {children}
-        <div className="mt-4 bg-blue-gray-50 shadow-lg">
-          <Footer />
-        </div>
+      </div>
+      <div className=" bottom-0  w-full right-0 absolute  bg-blue-gray-50 ">
+        <Footer />
       </div>
     </div>
   );

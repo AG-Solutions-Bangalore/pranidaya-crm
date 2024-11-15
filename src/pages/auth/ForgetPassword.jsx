@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import img1 from "../../assets/mainpage.jpg";
 import Logo from "../../assets/logo.jpg";
 import { useState } from "react";
-import  { BaseUrl } from "../../base/BaseUrl";
+import { BaseUrl } from "../../base/BaseUrl";
 import { toast } from "react-toastify";
 
 const ForgetPassword = () => {
@@ -14,12 +14,9 @@ const ForgetPassword = () => {
     e.preventDefault();
 
     if (email !== "" && username !== "") {
-      fetch(
-        `${BaseUrl}/send-password?username=${username}&email=${email}`,
-        {
-          method: "POST",
-        }
-      )
+      fetch(`${BaseUrl}/send-password?username=${username}&email=${email}`, {
+        method: "POST",
+      })
         .then((response) => response.json())
         .then((response) => {
           toast.success("New Password Sent to your Email");
@@ -44,13 +41,15 @@ const ForgetPassword = () => {
               <img
                 src={Logo}
                 alt="RK Cylinder Logo"
-                className="h-14 w-auto rounded-lg  "
+                className="h-auto w-full rounded-lg  "
               />
             </div>
             <h2 className="font-bold text-2xl text-[#002D74]">
               Forget Password
             </h2>
-            <p className="text-xs mt-4 text-[#002D74]">Get started with PRANI DAYA</p>
+            <p className="text-xs mt-4 text-[#002D74]">
+              Get started with PRANI DAYA
+            </p>
             <form
               method="POST"
               className="mt-8 mb-2 w-full"

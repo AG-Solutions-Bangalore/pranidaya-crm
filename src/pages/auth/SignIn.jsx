@@ -89,18 +89,25 @@ const SignIn = () => {
             />
           </Carousel> */}
           <img
-              src={image1}
-              alt="img 1"
-              className="h-full w-full object-cover"
-            />
+            src={image1}
+            alt="img 1"
+            className="h-full w-full object-cover"
+          />
         </div>
 
         {/* Right Section for Login Form  h-full add*/}
         <div className="flex-1 flex items-center bg-blue-50 justify-center px-4 lg:px-8 py-12 h-full lg:w-1/2">
           <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg  shadow-blue-500 ">
-            <h2 className="flex justify-center font-extrabold text-5xl bg-gradient-to-b from-[#32e432] via-[#1f1f75] to-[#FF8C00] bg-clip-text text-transparent">
+            {/* <h2 className="flex justify-center font-extrabold text-5xl bg-gradient-to-b from-[#32e432] via-[#1f1f75] to-[#FF8C00] bg-clip-text text-transparent">
               PRANI DAYA
-            </h2>
+            </h2> */}
+            <div>
+              <img
+                src={Logo}
+                alt="Logo"
+                className="h-auto w-full rounded-lg  "
+              />
+            </div>
 
             <div className="flex justify-between mb-4">
               <div>
@@ -109,9 +116,6 @@ const SignIn = () => {
                   If you are already a member, easily log in
                 </p>
               </div>
-            </div>
-            <div>
-              <img src={Logo} alt="Logo" className="h-14 w-auto rounded-lg  " />
             </div>
 
             <form
