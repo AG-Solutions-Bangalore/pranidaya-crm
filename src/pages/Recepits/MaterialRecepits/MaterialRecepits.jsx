@@ -14,15 +14,10 @@ import { Spinner } from "@material-tailwind/react";
 const MaterialReceipts = () => {
   const [materialdata, setMaterialData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchApprovedRData = async () => {
-      if (!isPanelUp) {
-        navigate("/maintenance");
-        return;
-      }
+  
 
       setLoading(true);
 
@@ -43,7 +38,7 @@ const MaterialReceipts = () => {
     };
 
     fetchApprovedRData();
-  }, [isPanelUp, navigate]);
+  }, []);
 
   const columns = [
     {
