@@ -41,19 +41,7 @@ const RecepitCashRecepit = () => {
 
         const res = response.data?.receipts;
         console.log(res);
-        if (Array.isArray(res)) {
-          const tempRows = res.map((item, index) => [
-            index + 1,
-            item["c_receipt_no"],
-            item["donor_full_name"],
-            moment(item["c_receipt_date"]).format("DD-MM-YYYY"),
-            item["c_receipt_exemption_type"],
-            item["c_receipt_total_amount"],
-            item["c_receipt_count"],
-            item["id"],
-          ]);
-          setPendingRListData(tempRows);
-        }
+        setPendingRListData(res);
       } catch (error) {
         console.error("Error fetching pending list request data", error);
       } finally {
@@ -65,15 +53,7 @@ const RecepitCashRecepit = () => {
 
   const columns = [
     {
-      name: "SlNo",
-      label: "SlNo",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "Receipt No",
+      name: "c_receipt_no",
       label: "Receipt No",
       options: {
         filter: false,
@@ -83,7 +63,7 @@ const RecepitCashRecepit = () => {
       },
     },
     {
-      name: "Name",
+      name: "donor_full_name",
       label: "Name",
       options: {
         filter: false,
@@ -93,17 +73,20 @@ const RecepitCashRecepit = () => {
       },
     },
     {
-      name: "Date",
+      name: "c_receipt_date",
       label: "Date",
       options: {
         filter: false,
         print: true,
         download: true,
         sort: false,
+        customBodyRender: (value) => {
+          return moment(value).format("DD-MM-YYYY");
+        },
       },
     },
     {
-      name: "Exemption Type",
+      name: "c_receipt_exemption_type",
       label: "Exemption Type",
       options: {
         filter: false,
@@ -112,9 +95,10 @@ const RecepitCashRecepit = () => {
         sort: false,
       },
     },
+
     {
-      name: "Donation Type",
-      label: "Donation Type",
+      name: "c_receipt_total_amount",
+      label: "Amount",
       options: {
         filter: false,
         print: true,
@@ -123,8 +107,8 @@ const RecepitCashRecepit = () => {
       },
     },
     {
-      name: "Amount",
-      label: "Amount",
+      name: "c_receipt_count",
+      label: "No of Item",
       options: {
         filter: false,
         print: true,
@@ -168,7 +152,7 @@ const RecepitCashRecepit = () => {
   const options = {
     selectableRows: "none",
     elevation: 0,
-
+    filter: false,
     responsive: "standard",
     download: false,
     print: false,
