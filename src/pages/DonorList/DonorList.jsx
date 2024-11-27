@@ -28,24 +28,7 @@ const DonorList = () => {
           },
         });
 
-        const responseData = response.data.donor;
-
-        if (Array.isArray(responseData)) {
-          const tempRows = responseData.map((item, index) => [
-            index + 1,
-            item.donor_fts_id,
-            item.donor_full_name,
-            item.donor_type,
-            item.donor_spouse_name,
-            item.donor_mobile,
-            item.donor_email,
-            item.id,
-          ]);
-          setDonorListData(tempRows);
-        } else {
-          console.error("Expected an array but received", responseData);
-          setDonorListData([]);
-        }
+        setDonorListData(response.data.donor);
       } catch (error) {
         console.error("Error fetching open list enquiry data", error);
       } finally {
@@ -58,27 +41,19 @@ const DonorList = () => {
 
   const columns = [
     {
-      name: "#",
+      name: "donor_fts_id",
+      label: "PDS ID",
       options: {
         filter: false,
-        print: true,
-        download: true,
-        sort: false,
-      },
-    },
-    {
-      name: "PDS ID",
-      options: {
-        filter: true,
-        print: true,
-        download: true,
+        print: false,
+        download: false,
         display: "included",
         sort: false,
       },
     },
 
     {
-      name: "Name ",
+      name: "donor_full_name",
       label: " Name ",
       options: {
         filter: false,
@@ -86,23 +61,7 @@ const DonorList = () => {
       },
     },
     {
-      name: "Type ",
-      label: " Type ",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "Spouse/Contact ",
-      label: " Spouse/Contact ",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "Mobile ",
+      name: "donor_mobile",
       label: " Mobile ",
       options: {
         filter: false,
@@ -110,7 +69,7 @@ const DonorList = () => {
       },
     },
     {
-      name: "Email ",
+      name: "donor_email",
       label: " Email ",
       options: {
         filter: false,
@@ -166,6 +125,7 @@ const DonorList = () => {
     responsive: "standard",
     viewColumns: true,
     download: false,
+    filter: false,
     print: false,
     setRowProps: (rowData) => {
       return {
