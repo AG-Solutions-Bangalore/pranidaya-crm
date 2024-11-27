@@ -19,18 +19,10 @@ const RecepitCashRecepit = () => {
   useEffect(() => {
     const fetchPendingRData = async () => {
       const userTypeId = localStorage.getItem("user_type_id");
-      if (!userTypeId) {
-        navigate("/signin");
-        return;
-      }
 
       setUserType(userTypeId);
 
       try {
-        if (!isPanelUp) {
-          navigate("/maintenance");
-          return;
-        }
         setLoading(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(`${BaseUrl}/fetch-c-receipt-list`, {
@@ -49,7 +41,7 @@ const RecepitCashRecepit = () => {
       }
     };
     fetchPendingRData();
-  }, [isPanelUp, navigate]);
+  }, []);
 
   const columns = [
     {
