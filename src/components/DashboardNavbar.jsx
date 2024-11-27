@@ -80,7 +80,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
             ))}
           </Breadcrumbs>
           {/* <Typography variant="h6" color="white">
-            {pageTitle}
+            {ma}
           </Typography> */}
         </div>
         <div className="flex items-center">
