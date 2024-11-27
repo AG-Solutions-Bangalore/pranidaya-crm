@@ -44,8 +44,12 @@ const pay_mode = [
     label: "Cheque",
   },
   {
-    value: "Transfer",
-    label: "Transfer",
+    value: "Credit Card",
+    label: "Credit Card",
+  },
+  {
+    value: "Online",
+    label: "Online",
   },
   {
     value: "Others",
@@ -59,8 +63,12 @@ const pay_mode_2 = [
     label: "Cheque",
   },
   {
-    value: "Transfer",
-    label: "Transfer",
+    value: "Credit Card",
+    label: "Credit Card",
+  },
+  {
+    value: "Online",
+    label: "Online",
   },
   {
     value: "Others",

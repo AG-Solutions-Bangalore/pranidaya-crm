@@ -323,7 +323,7 @@ const NewsDashboard = () => {
             <div>
               {isBarVisible && (
                 <div
-                  className={`relative flex flex-col rounded-xl bg-white text-gray-700 shadow-md mt-8 ${
+                  className={`relative flex flex-col rounded-xl bg-white text-gray-100 shadow-md mt-8 ${
                     isBarMinimized ? "h-16" : "h-auto"
                   }`}
                 >
