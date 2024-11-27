@@ -33,18 +33,8 @@ const MaterialReceipts = () => {
         });
 
         const res = response.data?.receipts;
-        if (Array.isArray(res)) {
-          const tempRows = res.map((item, index) => [
-            index + 1,
-            item["m_receipt_no"],
-            moment(item["m_receipt_date"]).format("DD-MM-YYYY"),
-            item["donor_full_name"],
-            item["m_receipt_total_amount"],
-            item["m_receipt_count"],
-            item["id"],
-          ]);
-          setMaterialData(tempRows);
-        }
+
+        setMaterialData(res);
       } catch (error) {
         console.error("Error fetching approved list request data", error);
       } finally {
@@ -57,15 +47,7 @@ const MaterialReceipts = () => {
 
   const columns = [
     {
-      name: "SlNo",
-      label: "Sl No",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "Receipt No",
+      name: "m_receipt_no",
       label: "Receipt No",
       options: {
         filter: false,
@@ -73,15 +55,18 @@ const MaterialReceipts = () => {
       },
     },
     {
-      name: "Date",
+      name: "m_receipt_date",
       label: "Date",
       options: {
         filter: false,
         sort: false,
+        customBodyRender: (value) => {
+          return moment(value).format("DD-MM-YYYY");
+        },
       },
     },
     {
-      name: "Name",
+      name: "donor_full_name",
       label: "Name",
       options: {
         filter: false,
@@ -89,7 +74,7 @@ const MaterialReceipts = () => {
       },
     },
     {
-      name: "Approx Value",
+      name: "m_receipt_total_amount",
       label: "Approx Value",
       options: {
         filter: false,
@@ -97,7 +82,7 @@ const MaterialReceipts = () => {
       },
     },
     {
-      name: "No of Items",
+      name: "m_receipt_count",
       label: "No of Items",
       options: {
         filter: false,
@@ -147,7 +132,7 @@ const MaterialReceipts = () => {
   const options = {
     selectableRows: "none",
     elevation: 0,
-
+    filter: false,
     responsive: "standard",
     viewColumns: true,
     download: false,
