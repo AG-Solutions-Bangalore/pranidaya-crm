@@ -337,6 +337,8 @@ const DonorDonationReceipt = () => {
             ? Object.assign(user, { [e.target.name]: e.target.value })
             : user
         );
+        console.log(updatedUsers);
+
         setUsers(updatedUsers);
       }
     } else {
@@ -366,80 +368,6 @@ const DonorDonationReceipt = () => {
     }));
   };
 
-  const handlePurposeChange = (e, index) => {
-    const { name, value } = e.target;
-    // Update the specific user's purpose based on index
-    setUsers((prevUsers) =>
-      prevUsers.map((user, i) =>
-        i === index ? { ...user, [name]: value } : user
-      )
-    );
-  };
-  // const onSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   let data = {
-  //     donor_fts_id: userdata.donor_fts_id,
-  //     c_receipt_financial_year: currentYear,
-  //     c_receipt_date: check ? dayClose : dayClose,
-  //     c_receipt_exemption_type: donor.c_receipt_exemption_type,
-  //     c_receipt_total_amount: donor.c_receipt_total_amount,
-  //     c_receipt_count: fabric_inward_count,
-  //     c_receipt_tran_pay_mode: donor.c_receipt_tran_pay_mode,
-  //     c_receipt_tran_pay_details: donor.c_receipt_tran_pay_details,
-  //     c_receipt_occasional: donor.c_receipt_occasional,
-  //     c_receipt_remarks: donor.c_receipt_remarks,
-  //     c_receipt_reason: donor.c_receipt_reason,
-  //     c_receipt_email_count: donor.c_receipt_email_count,
-  //     c_manual_receipt_no: donor.c_manual_receipt_no,
-  //     c_receipt_sub_data: users,
-  //     family_full_check: donor.family_full_check,
-  //     family_full_name: donor.family_full_name,
-  //   };
-
-  //   const isValid = document.getElementById("addIndiv").checkValidity();
-
-  //   if (isValid) {
-  //     setIsButtonDisabled(true);
-
-  //     axios
-  //       .post(`${BaseUrl}/create-c-receipt`, data, {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //         },
-  //       })
-  //       .then((res) => {
-  //         if (res.status == 200 || res.data.code == "200") {
-  //           toast.success("Donor Created Successfully");
-  //           setTimeout(() => {
-  //             navigate(`/recepit-view/${res.data?.latestid?.id}`);
-  //           }, 100);
-  //         } else {
-  //           toast.error(res.data.message || "Error occurred");
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         // Improved error logging
-  //         if (err.response) {
-  //           toast.error(
-  //             `Error: ${
-  //               err.response.data.message || "An error occurred on the server"
-  //             }`
-  //           );
-  //           console.error("Server Error:", err.response);
-  //         } else if (err.request) {
-  //           toast.error("No response from the server.");
-  //           console.error("No Response:", err.request);
-  //         } else {
-  //           toast.error(`Error: ${err.message}`);
-  //           console.error("Error Message:", err.message);
-  //         }
-  //       })
-  //       .finally(() => {
-  //         setIsButtonDisabled(false);
-  //       });
-  //   }
-  // };
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -475,7 +403,7 @@ const DonorDonationReceipt = () => {
     };
 
     const isValid = document.getElementById("addIndiv").checkValidity();
-
+    console.log(data, "finaldat");
     if (isValid) {
       setIsButtonDisabled(true);
 
@@ -686,65 +614,6 @@ const DonorDonationReceipt = () => {
         </div>
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-4">
-              <div className="w-full md:col-span-2 ">
-                <Fields
-                  type="newwhatsappDropdown"
-                  title="Category"
-                  name="c_receipt_exemption_type"
-                  value={donor.c_receipt_exemption_type}
-                  onChange={(e) => onInputChange(e)}
-                  required={true}
-                  options={exemption}
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <Fields
-                  type="transactionDropdown"
-                  title="Transaction Type"
-                  required={true}
-                  options={
-                    donor.c_receipt_exemption_type == "80G" &&
-                    donor.c_receipt_total_amount > 2000
-                      ? pay_mode_2
-                      : pay_mode
-                  }
-                  name="c_receipt_tran_pay_mode"
-                  value={donor.c_receipt_tran_pay_mode}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </div>
-              <div className="flex md:col-span-2 ">
-                <Fields
-                  type="familyDropdowns"
-                  title="Family Member"
-                  required={true}
-                  name="family_full_check"
-                  value={donor.family_full_check}
-                  onChange={(e) => onInputChange(e)}
-                  options={family_check}
-                  className="inline"
-                />
-
-                {donor.family_full_check == "Yes" ? (
-                  <Fields
-                    select
-                    title="Family Member "
-                    type="familyDropdown"
-                    name="family_full_name"
-                    value={donor.family_full_name}
-                    onChange={(e) => onInputChange(e)}
-                    options={userfamilydata}
-                    className="inline "
-                    size="small"
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-            </div> */}
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
               <div className="w-full col-span-1 sm:col-span-2 lg:col-span-2">
                 <Fields
@@ -845,55 +714,6 @@ const DonorDonationReceipt = () => {
                 />
               </div>
             </div>
-
-            {/* Line Items */}
-            {/* {users.map((user, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 mb-4 gap-4"
-              >
-                <div className="md:col-span-4 md:w-auto">
-               
-                  <Fields
-                    required
-                    select
-                    title="Purpose"
-                    type="TransactionType1"
-                    name="c_receipt_sub_donation_type"
-                    value={donor.c_receipt_sub_donation_type}
-                    onChange={(e) => onChange(e, index)}
-                    donor={donor}
-                    donation_type={donation_type}
-                    donation_type_2={donation_type_2}
-                  ></Fields>
-                </div>
-
-                <div>
-                  <Input
-                    required
-                    label="Amount"
-                    type="number"
-                    value={users.c_receipt_sub_amount}
-                    name="c_receipt_sub_amount"
-                    onChange={(e) => {
-                      onChange(e, index);
-                      AmountCal(index);
-                    }}
-                  />
-                </div>
-
-                <div className="md:col-span-0.1 flex items-center justify-start lg:ml-12">
-                  <button
-                    color="error"
-                    onClick={() => removeUser(index)}
-                    className="text-2xl text-red-600"
-                    aria-label="Delete"
-                  >
-                    <MdDelete />
-                  </button>
-                </div>
-              </div>
-            ))} */}
 
             {users.map((user, index) => (
               <div

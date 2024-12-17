@@ -12,9 +12,9 @@ import moment from "moment/moment";
 import html2pdf from "html2pdf.js";
 
 const TABLE_HEAD = ["Donation Trans Type", "Amount"];
+const TABLE_HEAD1 = ["Donation Trans Type", "Count", "Amount"];
 
 function DonationSummaryView() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const [donationSummary, setDonationSummary] = useState({});
   const [donationSummaryTrans, setDonationSummaryTrans] = useState([]);
@@ -65,7 +65,7 @@ function DonationSummaryView() {
   const handlePrint = () => {
     const element = componentRef.current;
     const opt = {
-      margin: 1,
+      margin: 0.2,
       filename: `Stock_Summary_${from_date}_to_${to_date}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
@@ -88,7 +88,6 @@ function DonationSummaryView() {
 
     printWindow.document.write("<html><head><title>Print Receipt</title>");
 
-    // Add CSS styles to the print window
     const styles = Array.from(document.styleSheets)
       .map((styleSheet) => {
         try {
@@ -103,7 +102,12 @@ function DonationSummaryView() {
         }
       })
       .join("");
-    printWindow.document.write(`<style>${styles}</style>`);
+    printWindow.document.write(`<style>
+    ${styles}
+    .print-container {
+      margin: 20px; /* Adjust margin as needed */
+    }
+  </style>`);
     printWindow.document.write("</head><body>");
     printWindow.document.write(printContent.innerHTML);
     printWindow.document.write("</body></html>");
@@ -153,7 +157,7 @@ function DonationSummaryView() {
               <Spinner className="h-12 w-12" />
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto print-container">
               <div className="flex justify-center">
                 <div className="p-4 text-xl md:text-2xl flex justify-center font-bold">
                   Donation Summary - From: {from_date} To: {to_date}
@@ -210,13 +214,38 @@ function DonationSummaryView() {
                     </tr>
                   )}
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td
+                      colSpan={TABLE_HEAD.length - 1}
+                      className="border border-gray-300 p-4 bg-blue-gray-50/50 text-right"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        Total:
+                      </Typography>
+                    </td>
+                    <td className="border border-gray-300 p-4 bg-blue-gray-50/50">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {donationSummaryTransSum?.total_amount || "0"}
+                      </Typography>
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
               {/* SECOND TABLE  */}
 
               <table className="min-w-full text-left border-collapse border border-gray-300 mt-5">
                 <thead>
                   <tr>
-                    {TABLE_HEAD.map((head) => (
+                    {TABLE_HEAD1.map((head) => (
                       <th
                         key={head}
                         className="border-b border-gray-300 bg-blue-gray-50 p-4"
@@ -233,27 +262,38 @@ function DonationSummaryView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {donationSummarySum && donationSummarySum.length >= 0 ? (
-                    <tr>
-                      <td className="border border-gray-300 p-4">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          Total
-                        </Typography>
-                      </td>
-                      <td className="border border-gray-300 p-4 bg-blue-gray-50/50">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {donationSummarySum.total_amount}{" "}
-                        </Typography>
-                      </td>
-                    </tr>
+                  {donationSummary.length > 0 ? (
+                    donationSummary.map((stockItem, index) => (
+                      <tr key={index}>
+                        <td className="border border-gray-300 p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {stockItem.c_receipt_sub_donation_type}
+                          </Typography>
+                        </td>
+                        <td className="border border-gray-300 p-4 bg-blue-gray-50/50">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {stockItem.total_recipt_count}
+                          </Typography>
+                        </td>
+                        <td className="border border-gray-300 p-4 bg-blue-gray-50/50">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {stockItem.total_amount}
+                          </Typography>
+                        </td>
+                      </tr>
+                    ))
                   ) : (
                     <tr>
                       <td colSpan={5} className="p-4 text-center">
@@ -262,6 +302,31 @@ function DonationSummaryView() {
                     </tr>
                   )}
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td
+                      colSpan={TABLE_HEAD1.length - 1}
+                      className="border border-gray-300 p-4 bg-blue-gray-50/50 text-right"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        Total:
+                      </Typography>
+                    </td>
+                    <td className="border border-gray-300 p-4 bg-blue-gray-50/50">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {donationSummarySum?.total_amount || "0"}
+                      </Typography>
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           )}
