@@ -141,7 +141,7 @@ const AddConsumption = () => {
               <Input
                 type="date"
                 id="purchase_date"
-                name="purchase_date"
+                name="cons_date"
                 label="Date"
                 value={cons.cons_date}
                 onChange={onInputChange}

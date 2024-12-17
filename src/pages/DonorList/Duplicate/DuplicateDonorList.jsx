@@ -20,10 +20,6 @@ const DuplicateDonorList = () => {
   useEffect(() => {
     const fetchPendingRData = async () => {
       try {
-        if (!isPanelUp) {
-          navigate("/maintenance");
-          return;
-        }
         setLoading(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(`${BaseUrl}/fetch-donors-duplicate`, {

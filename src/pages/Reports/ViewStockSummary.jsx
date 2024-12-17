@@ -49,7 +49,12 @@ function ViewStockSummary() {
         }
       })
       .join("");
-    printWindow.document.write(`<style>${styles}</style>`);
+    printWindow.document.write(`<style>
+    ${styles}
+    .print-container {
+      margin: 20px; /* Adjust margin as needed */
+    }
+  </style>`);
     printWindow.document.write("</head><body>");
     printWindow.document.write(printContent.innerHTML);
     printWindow.document.write("</body></html>");
@@ -57,10 +62,29 @@ function ViewStockSummary() {
     printWindow.print();
   };
 
+  // const downloadPDF = () => {
+  //   const element = componentRef.current;
+  //   const opt = {
+  //     margin: 1,
+  //     filename: `Stock_Summary_${from_date}_to_${to_date}.pdf`,
+  //     image: { type: "jpeg", quality: 0.98 },
+  //     html2canvas: { scale: 2 },
+  //     jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  //   };
+
+  //   html2pdf()
+  //     .from(element)
+  //     .set(opt)
+  //     .save()
+  //     .catch((error) => {
+  //       console.error("PDF generation error:", error);
+  //       toast.error("Failed to download PDF.");
+  //     });
+  // };
   const downloadPDF = () => {
     const element = componentRef.current;
     const opt = {
-      margin: 1,
+      margin: 0.2, // Reduced margin to 0.5 inches (adjust as needed)
       filename: `Stock_Summary_${from_date}_to_${to_date}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
@@ -151,7 +175,7 @@ function ViewStockSummary() {
               <Spinner className="h-12 w-12" />
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto print-container">
               <div className="flex justify-center">
                 <div className="p-4 text-xl md:text-2xl flex justify-center font-bold">
                   Stock Summary - From: {from_date} To: {to_date}
