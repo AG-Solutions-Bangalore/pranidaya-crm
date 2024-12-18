@@ -7,21 +7,16 @@ import axios from "axios";
 import { BaseUrl } from "../../../base/BaseUrl";
 import MUIDataTable from "mui-datatables";
 import { NumericFormat } from "react-number-format";
+import { Spinner } from "@material-tailwind/react";
 
 const Stock = () => {
   const [stockList, setStockList] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-
-        if (!token) {
-          navigate("/login");
-          return;
-        }
 
         setLoading(true);
         const response = await axios.post(
@@ -162,14 +157,21 @@ const Stock = () => {
           Stocks List ( In Kgs )
         </h3>
       </div>
-      <div className="mt-5">
-        <MUIDataTable
-          title={"Current Month"}
-          data={stockList ? stockList : []}
-          columns={columns}
-          options={options}
-        />
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner className="h-6 w-6" />
+        </div>
+      ) : (
+        <div className="mt-5">
+          <MUIDataTable
+            title={"Current Month"}
+            data={stockList ? stockList : []}
+            columns={columns}
+            options={options}
+          />
+        </div>
+      )}
     </Layout>
   );
 };

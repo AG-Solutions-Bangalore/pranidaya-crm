@@ -153,8 +153,8 @@ function DonationSummaryView() {
       <div className="flex justify-center mt-4">
         <Card ref={componentRef} className="p-4 w-full overflow-x-auto">
           {loader ? (
-            <div className="flex justify-center items-center h-64">
-              <Spinner className="h-12 w-12" />
+              <div className="flex justify-center items-center h-64">
+              <Spinner className="h-6 w-6"/>
             </div>
           ) : (
             <div className="overflow-x-auto print-container">

@@ -161,6 +161,9 @@ const EditPurchase = () => {
                   value={purchase.purchase_date}
                   onChange={onInputChange}
                   disabled
+                  labelProps={{
+                    className: "!text-gray-900",
+                  }}
                   className="border rounded p-2 w-full border-gray-400"
                 />
               </div>

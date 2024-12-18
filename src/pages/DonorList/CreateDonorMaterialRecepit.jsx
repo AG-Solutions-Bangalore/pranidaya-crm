@@ -88,6 +88,7 @@ const DonorDonationReceipt = () => {
     m_receipt_sub_quantity: "",
     m_receipt_sub_unit: "",
     m_receipt_sub_amount: "",
+    
   };
 
   const [users, setUsers] = useState([useTemplate]);
@@ -529,8 +530,8 @@ const DonorDonationReceipt = () => {
                     select
                     title="Item"
                     type="itemdropdown"
-                    value={user.purchase_sub_item}
-                    name="purchase_sub_item"
+                    value={user.m_receipt_sub_item}
+                    name="m_receipt_sub_item"
                     onChange={(e) => onChange(e, index)}
                     options={items}
                   />

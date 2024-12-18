@@ -7,6 +7,7 @@ import axios from "axios";
 import { BaseUrl } from "../../../base/BaseUrl";
 import { MdEdit } from "react-icons/md";
 import MUIDataTable from "mui-datatables";
+import { Spinner } from "@material-tailwind/react";
 
 const VendorList = () => {
   const [overdueListData, setOverdueListData] = useState([]);
@@ -157,13 +158,20 @@ const VendorList = () => {
           + Add Vendors
         </Link>
       </div>
-      <div className="mt-5">
-        <MUIDataTable
-          data={overdueListData}
-          columns={columns}
-          options={options}
-        />
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner className="h-6 w-6" />
+        </div>
+      ) : (
+        <div className="mt-5">
+          <MUIDataTable
+            data={overdueListData}
+            columns={columns}
+            options={options}
+          />
+        </div>
+      )}
     </Layout>
   );
 };

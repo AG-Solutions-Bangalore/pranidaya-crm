@@ -18,10 +18,6 @@ const FamilyList = () => {
   useEffect(() => {
     const fetchdeliveryDData = async () => {
       try {
-        if (!isPanelUp) {
-          navigate("/maintenance");
-          return;
-        }
         setLoading(true);
         localStorage.setItem("donor_fts_id", id);
         const token = localStorage.getItem("token");
@@ -112,11 +108,13 @@ const FamilyList = () => {
         </h3> */}
         <div className="flex items-center">
           <MdKeyboardBackspace
-            onClick={()=>{navigate("/donor-list")}}
+            onClick={() => {
+              navigate("/donor-list");
+            }}
             className="text-white bg-[#464D69] p-1 w-10 h-8 cursor-pointer rounded-2xl"
           />
           <h1 className="text-2xl text-[#464D69] font-semibold ml-2">
-          Family Member List
+            Family Member List
           </h1>
         </div>
 

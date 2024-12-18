@@ -151,7 +151,7 @@ const App = () => {
         {/* //STOCK */}
         <Route path="/stock" element={<ProtectedRoute element={<Stock />} />} />
         <Route
-          path="/recepit-add/:id"
+          path="/recepit-edit/:id"
           element={<ProtectedRoute element={<EditRecepit />} />}
         />
         <Route
@@ -160,7 +160,7 @@ const App = () => {
         />
         {/* //MATERIAL Recepits */}
         <Route
-          path="/material-add/:id"
+          path="/material-edit/:id"
           element={<ProtectedRoute element={<EditMaterial />} />}
         />
         <Route

@@ -17,8 +17,6 @@ const MaterialReceipts = () => {
 
   useEffect(() => {
     const fetchApprovedRData = async () => {
-  
-
       setLoading(true);
 
       try {
@@ -95,10 +93,10 @@ const MaterialReceipts = () => {
             <div className="flex items-center space-x-2">
               <Link
                 to={`/material-view/${id}`}
-                style={{
-                  display:
-                    localStorage.getItem("user_type_id") == 2 ? "" : "none",
-                }}
+                // style={{
+                //   display:
+                //     localStorage.getItem("user_type_id") == 2 ? "" : "none",
+                // }}
               >
                 <MdOutlineRemoveRedEye
                   title="View"
@@ -106,10 +104,10 @@ const MaterialReceipts = () => {
                 />
               </Link>
               <Link
-                to={`/material-add/${id}`}
+                to={`/material-edit/${id}`}
                 style={{
                   display:
-                    localStorage.getItem("user_type_id") == 4 ? "none" : "",
+                    localStorage.getItem("user_type_id") === "2" ? "" : "none",
                 }}
               >
                 <MdEdit
@@ -152,7 +150,7 @@ const MaterialReceipts = () => {
       <div className="mt-5">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Spinner className="h-12 w-12" color="purple" />
+            <Spinner className="h-6 w-6" />
           </div>
         ) : (
           <MUIDataTable

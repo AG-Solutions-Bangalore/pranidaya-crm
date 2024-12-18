@@ -121,7 +121,7 @@ const DuplicateDonorList = () => {
             <div style={{ minWidth: "150px" }}>
               {!value.startsWith(0) ? (
                 <MdEdit
-                  className="text-blue-500 text-lg cursor-pointer"
+                className="h-5 w-5 cursor-pointer text-blue-500 "
                   onClick={() => {
                     navigate(
                       `/edit-duplicate/${value.substr(
@@ -133,7 +133,7 @@ const DuplicateDonorList = () => {
                 />
               ) : (
                 <MdDelete
-                  className="text-blue-500 text-lg cursor-pointer"
+                className="h-5 w-5 cursor-pointer text-blue-500"
                   onClick={() =>
                     updateData(value.substr(value.indexOf("#") + 1))
                   }
@@ -182,7 +182,7 @@ const DuplicateDonorList = () => {
       </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <Spinner className="h-12 w-12" color="purple" />
+          <Spinner className="h-6 w-6" />
         </div>
       ) : (
         <div className="mt-5">

@@ -334,7 +334,6 @@ const EditMaterial = () => {
               </div>
               <div className="mb-4">
                 <Fields
-                  required
                   label="Reason"
                   type="textField"
                   value={donor.m_receipt_reason}

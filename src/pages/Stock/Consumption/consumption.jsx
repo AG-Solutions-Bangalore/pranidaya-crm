@@ -8,19 +8,15 @@ import { BaseUrl } from "../../../base/BaseUrl";
 import { MdEdit } from "react-icons/md";
 import MUIDataTable from "mui-datatables";
 import moment from "moment";
+import { Spinner } from "@material-tailwind/react";
 
 const Consumption = () => {
   const [consumptionList, setConsumptionList] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchdeliveryDData = async () => {
       try {
-        if (!isPanelUp) {
-          navigate("/maintenance");
-          return;
-        }
         setLoading(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(`${BaseUrl}/fetch-cons-list`, {
@@ -47,7 +43,6 @@ const Consumption = () => {
       }
     };
     fetchdeliveryDData();
-    setLoading(false);
   }, []);
 
   const columns = [
@@ -128,23 +123,24 @@ const Consumption = () => {
         <Link
           to="/add-consumption"
           className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-          // style={{
-          //   display:
-          //     localStorage.getItem("user_type_id") == 2
-          //       ? "inline-block"
-          //       : "none",
-          // }}
         >
           + Add Consumption
         </Link>
       </div>
-      <div className="mt-5">
-        <MUIDataTable
-          data={consumptionList ? consumptionList : []}
-          columns={columns}
-          options={options}
-        />
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner className="h-6 w-6" />
+        </div>
+      ) : (
+        <div className="mt-5">
+          <MUIDataTable
+            data={consumptionList ? consumptionList : []}
+            columns={columns}
+            options={options}
+          />
+        </div>
+      )}
     </Layout>
   );
 };

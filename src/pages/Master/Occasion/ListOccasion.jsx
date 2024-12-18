@@ -7,6 +7,7 @@ import { BaseUrl } from "../../../base/BaseUrl";
 import { MdEdit } from "react-icons/md";
 import MUIDataTable from "mui-datatables";
 import EnquiryFilter from "../../../components/EnquiryFilter";
+import { Spinner } from "@material-tailwind/react";
 
 const ListOccasion = () => {
   const [openListData, setOpenListData] = useState([]);
@@ -126,9 +127,20 @@ const ListOccasion = () => {
           + Add Occasion
         </Link>
       </div>
-      <div className="mt-5">
-        <MUIDataTable data={openListData} columns={columns} options={options} />
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner className="h-6 w-6" />
+        </div>
+      ) : (
+        <div className="mt-5">
+          <MUIDataTable
+            data={openListData}
+            columns={columns}
+            options={options}
+          />
+        </div>
+      )}
     </Layout>
   );
 };
