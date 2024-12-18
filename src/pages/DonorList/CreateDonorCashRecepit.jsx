@@ -755,6 +755,7 @@ const DonorDonationReceipt = () => {
                     onClick={() => removeUser(index)}
                     className="text-2xl text-red-600"
                     aria-label="Delete"
+                    type="button"
                   >
                     <MdDelete />
                   </button>
