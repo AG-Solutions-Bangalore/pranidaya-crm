@@ -5,18 +5,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { BaseUrl } from "../../base/BaseUrl";
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
-import { MdEdit, MdOutlineStickyNote2, MdShoppingBasket } from "react-icons/md";
+import { MdEdit, MdOutlineStickyNote2 } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
-import { BiAbacus } from "react-icons/bi";
+import { PiNotebook } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa";
 import CommonListing from "./CommonListing";
-import { PiNotebook } from "react-icons/pi";
+import { Spinner } from "@material-tailwind/react";
 
 const DonorList = () => {
   const [donorListData, setDonorListData] = useState(null);
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchOpenData = async () => {
       try {
@@ -28,7 +29,7 @@ const DonorList = () => {
           },
         });
 
-        setDonorListData(response.data.donor);
+        setDonorListData(response?.data?.donor);
       } catch (error) {
         console.error("Error fetching open list enquiry data", error);
       } finally {
@@ -51,7 +52,6 @@ const DonorList = () => {
         sort: false,
       },
     },
-
     {
       name: "donor_full_name",
       label: " Name ",
@@ -90,13 +90,11 @@ const DonorList = () => {
                 title="View "
                 className="h-5 w-5 cursor-pointer text-blue-500 "
               />
-
               <MdEdit
                 onClick={() => navigate(`/edit-donor/${id}`)}
                 title="Edit"
                 className="h-5 w-5 cursor-pointer text-blue-500 "
               />
-
               <PiNotebook
                 onClick={() => navigate(`/createrecepit-donor/${id}`)}
                 title="Cash Recepit"
@@ -118,10 +116,10 @@ const DonorList = () => {
       },
     },
   ];
+
   const options = {
     selectableRows: "none",
     elevation: 0,
-
     responsive: "standard",
     viewColumns: true,
     download: false,
@@ -135,6 +133,7 @@ const DonorList = () => {
       };
     },
   };
+
   return (
     <Layout>
       <CommonListing />
@@ -150,13 +149,22 @@ const DonorList = () => {
           + Add Donor
         </Link>
       </div>
-      <div className="mt-5">
-        <MUIDataTable
-          data={donorListData ? donorListData : []}
-          columns={columns}
-          options={options}
-        />
-      </div>
+
+      {/* Show spinner while loading */}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner className="h-6 w-6" />
+        </div>
+      ) : (
+        <div className="mt-5">
+          <MUIDataTable
+            title="Donor List"
+            data={donorListData ? donorListData : []}
+            columns={columns}
+            options={options}
+          />
+        </div>
+      )}
     </Layout>
   );
 };

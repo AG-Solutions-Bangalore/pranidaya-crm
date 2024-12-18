@@ -119,6 +119,9 @@ const EditConsumption = () => {
                 value={cons.cons_date}
                 onChange={onInputChange}
                 required
+                labelProps={{
+                  className: "!text-gray-900",
+                }}
                 className="border rounded p-2 w-full border-gray-400"
               />
             </div>

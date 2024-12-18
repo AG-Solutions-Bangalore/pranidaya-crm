@@ -11,16 +11,11 @@ import { Spinner } from "@material-tailwind/react";
 const WebDonation = () => {
   const [webdonation, setWebDonation] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPendingRData = async () => {
       try {
-        if (!isPanelUp) {
-          navigate("/maintenance");
-          return;
-        }
         setLoading(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(
@@ -52,7 +47,7 @@ const WebDonation = () => {
     };
 
     fetchPendingRData();
-  }, [isPanelUp, navigate]);
+  }, []);
 
   const columns = [
     {
@@ -141,7 +136,7 @@ const WebDonation = () => {
       </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <Spinner className="h-12 w-12" color="purple" />
+          <Spinner className="h-6 w-6" />
         </div>
       ) : (
         <div className="mt-5">

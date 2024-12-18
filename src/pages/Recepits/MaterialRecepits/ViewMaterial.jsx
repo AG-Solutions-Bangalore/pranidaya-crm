@@ -27,10 +27,10 @@ function ViewMaterialRecepit() {
       },
     })
       .then((res) => {
-        setReceipts(res.data.receipts || {});
-        setCompany(res.data.company || {});
-        setDonor(res.data.donor);
-        setRecepitsub(res.data.receiptSub || []);
+        setReceipts(res?.data?.receipts || {});
+        setCompany(res?.data?.company || {});
+        setDonor(res?.data?.donor);
+        setRecepitsub(res?.data?.receiptSub || []);
       })
       .catch((error) => {
         console.error("Error fetching receipt data:", error);

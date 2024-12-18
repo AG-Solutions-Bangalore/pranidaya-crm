@@ -545,7 +545,6 @@ const EditRecepit = () => {
             </div>{" "}
             <div className="mb-4">
               <Fields
-                required
                 type="textField"
                 name="c_receipt_reason"
                 value={donor.c_receipt_reason}

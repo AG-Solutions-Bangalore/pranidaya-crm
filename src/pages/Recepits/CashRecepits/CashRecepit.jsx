@@ -118,7 +118,7 @@ const RecepitCashRecepit = () => {
             <div className="flex items-center space-x-2">
               <Link
                 to={`/recepit-view/${id}`}
-                style={{ display: userType === "4" ? "none" : "" }}
+                // style={{ display: userType === "4" ? "none" : "" }}
               >
                 <MdOutlineRemoveRedEye
                   title="View"
@@ -126,7 +126,7 @@ const RecepitCashRecepit = () => {
                 />
               </Link>
               <Link
-                to={`/recepit-add/${id}`}
+                to={`/recepit-edit/${id}`}
                 style={{ display: userType === "2" ? "" : "none" }}
               >
                 <MdEdit
@@ -161,7 +161,7 @@ const RecepitCashRecepit = () => {
       <div className="mt-5">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Spinner className="h-12 w-12" color="purple" />{" "}
+            <Spinner className="h-6 w-6" />
           </div>
         ) : (
           <MUIDataTable

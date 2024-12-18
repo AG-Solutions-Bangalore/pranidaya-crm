@@ -37,7 +37,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
     { name: "Home", link: "/home" },
     ...pathSegments.slice(0, 1).map((segment, index) => ({
       name: segment.charAt(0).toUpperCase() + segment.slice(1),
-      link: `/home/${segment}`,
+      // link: `/home/${segment}`,
     })),
   ];
 

@@ -62,25 +62,6 @@ function ViewStockSummary() {
     printWindow.print();
   };
 
-  // const downloadPDF = () => {
-  //   const element = componentRef.current;
-  //   const opt = {
-  //     margin: 1,
-  //     filename: `Stock_Summary_${from_date}_to_${to_date}.pdf`,
-  //     image: { type: "jpeg", quality: 0.98 },
-  //     html2canvas: { scale: 2 },
-  //     jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-  //   };
-
-  //   html2pdf()
-  //     .from(element)
-  //     .set(opt)
-  //     .save()
-  //     .catch((error) => {
-  //       console.error("PDF generation error:", error);
-  //       toast.error("Failed to download PDF.");
-  //     });
-  // };
   const downloadPDF = () => {
     const element = componentRef.current;
     const opt = {
@@ -172,7 +153,7 @@ function ViewStockSummary() {
         <Card className="p-4 w-full overflow-x-auto">
           {loader ? (
             <div className="flex justify-center items-center h-64">
-              <Spinner className="h-12 w-12" />
+              <Spinner className="h-6 w-6" />
             </div>
           ) : (
             <div className="overflow-x-auto print-container">
