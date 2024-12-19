@@ -614,7 +614,7 @@ const DonorDonationReceipt = () => {
         </div>
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
+            <div className="grid grid-cols-1  lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
               <div className="w-full col-span-1 sm:col-span-2 lg:col-span-2">
                 <Fields
                   type="newwhatsappDropdown"
@@ -684,7 +684,7 @@ const DonorDonationReceipt = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 md:my-5 ">
+            <div className="grid grid-cols-1  lg:grid-cols-3 gap-4 mb-4 md:my-5 ">
               <div>
                 <Fields
                   type="textField"
@@ -718,7 +718,7 @@ const DonorDonationReceipt = () => {
             {users.map((user, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-4"
+                className="grid grid-cols-1  lg:grid-cols-7 gap-4 mb-4"
               >
                 <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
                   <Fields
