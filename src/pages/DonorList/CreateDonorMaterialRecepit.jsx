@@ -418,7 +418,7 @@ const DonorDonationReceipt = () => {
               disabled={dayClose === todayback}
               onClick={dayClose !== todayback ? (e) => onDayClose(e) : null}
               className="btn-get-started  bg-red-400"
-              color="danger"
+              // color="danger"
             >
               + Day Close
             </Button>
@@ -613,16 +613,12 @@ const DonorDonationReceipt = () => {
             <div className="flex justify-center mt-4 space-x-4">
               <Button
                 type="submit"
-                variant="contained"
-                color="primary"
                 disabled={isButtonDisabled}
                 className="mt-4 bg-blue-400"
               >
                 Submit
               </Button>
               <Button
-                variant="contained"
-                color="secondary"
                 className="mt-4 bg-red-400"
                 onClick={handleBackButton}
               >

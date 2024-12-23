@@ -7,7 +7,8 @@ import Fields from "../../components/common/TextField/TextField";
 import { toast, Toaster } from "react-hot-toast";
 import { BaseUrl } from "../../base/BaseUrl";
 import moment from "moment/moment";
-import { Button, Input } from "@material-tailwind/react";
+import { Button, ButtonGroup, Input } from "@material-tailwind/react";
+import { FormLabel } from "@mui/material";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -541,6 +542,41 @@ const DonorDonationReceipt = () => {
       }
     });
   };
+  const handleButtonGroupChange = (stateName, value) => {
+    console.log(value);
+
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      [stateName]: value,
+    }));
+  };
+
+  const renderButtonGroup = (options, stateName, currentValue) => (
+    <ButtonGroup className="w-full h-9 flex flex-wrap  ">
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          onClick={() => handleButtonGroupChange(stateName, option.value)}
+          className={`flex-grow ${
+            currentValue === option.value
+              ? "bg-green-500 text-black"
+              : "bg-[#E1F5FA] text-blue-gray-700 hover:bg-blue-100"
+          } text-[10px] lg:text-xs py-2 lg:py-0
+            w-1/2 md:w-1/3 lg:w-auto rounded-none  mt-1 lg:mt-0   `}
+        >
+          {option.label}
+        </Button>
+      ))}
+    </ButtonGroup>
+  );
+
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
   return (
     <Layout>
       <Toaster position="top-right" reverseOrder={false} />
@@ -649,7 +685,7 @@ const DonorDonationReceipt = () => {
 
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1  lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
+            {/* <div className="grid grid-cols-1  lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
               <div className="w-full col-span-1 sm:col-span-2 lg:col-span-2">
                 <Fields
                   type="newwhatsappDropdown"
@@ -707,6 +743,75 @@ const DonorDonationReceipt = () => {
               </div>
 
               <div className="col-span-1 sm:col-span-2 lg:col-span-2 sm:mt-4">
+                <Fields
+                  select
+                  title="On Occasion"
+                  type="occasionDropdown"
+                  name="c_receipt_occasional"
+                  value={donor.c_receipt_occasional}
+                  onChange={(e) => onInputChange(e)}
+                  options={occasion}
+                />
+              </div>
+            </div> */}
+
+            <div className="grid grid-cols-1 gap-20 md:gap-4 lg:grid-cols-2">
+              <div className="col-span-1">
+                <FormLabel required>Category</FormLabel>
+                {renderButtonGroup(
+                  exemption,
+                  "c_receipt_exemption_type",
+                  donor.c_receipt_exemption_type
+                )}
+              </div>
+
+              <div className="col-span-1">
+                <FormLabel required>Transaction Type</FormLabel>
+                {renderButtonGroup(
+                  donor.c_receipt_exemption_type === "80G" &&
+                    donor.c_receipt_total_amount > 2000
+                    ? pay_mode_2
+                    : pay_mode,
+                  "c_receipt_tran_pay_mode",
+                  donor.c_receipt_tran_pay_mode
+                )}
+              </div>
+
+              {/* <div className="flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap"> */}
+              <div
+                className={`flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap ${
+                  typeof donor.donor_fts_id === "string" &&
+                  donor.donor_fts_id.trim() === ""
+                    ? "opacity-50 pointer-events-none"
+                    : ""
+                }`}
+              >
+                <div className="flex flex-col flex-1 sm:mt-10px md:mt-0">
+                  <FormLabel required>Family Member</FormLabel>
+                  {renderButtonGroup(
+                    family_check,
+                    "family_full_check",
+                    donor.family_full_check
+                  )}
+                </div>
+
+                {donor.family_full_check === "Yes" && (
+                  <div className="flex flex-1 mt-5">
+                    <Dropdown
+                      select
+                      label="Family Member"
+                      name="family_full_name"
+                      value={donor.family_full_name}
+                      onChange={(e) => onInputChange(e)}
+                      options={userfamilydata}
+                      className="flex-1"
+                      size="small"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="col-span-1  mt-5">
                 <Fields
                   select
                   title="On Occasion"

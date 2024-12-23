@@ -152,7 +152,7 @@ const donation_type_2 = [
   },
 ];
 
-const Test = () => {
+const CashRecepitAll = () => {
   const navigate = useNavigate();
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
@@ -398,6 +398,7 @@ const Test = () => {
     const requiredFields = [
       { field: donor.c_receipt_exemption_type, name: "Category" },
       { field: donor.c_receipt_tran_pay_mode, name: "Transaction Type" },
+      { field: donor.donor_fts_id, name: "Donor Name" },
     ];
 
     const emptyFields = requiredFields.filter((item) => !item.field);
@@ -484,6 +485,7 @@ const Test = () => {
       })
         .then((res) => {
           setUserfFamilydata(res.data.familyMember);
+          setUserdata(res.data.donor);
           console.log("Selected Donor Data", res.data.donor);
         })
         .catch((error) => {
@@ -612,7 +614,14 @@ const Test = () => {
     }));
   };
   console.log(donor.donor_fts_id, "out");
-  console.log(donor.family_full_name, "out1");
+
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
   return (
     <Layout>
       <Toaster position="top-right" reverseOrder={false} />
@@ -624,7 +633,7 @@ const Test = () => {
               className="text-white bg-[#464D69] p-1 w-10 h-8 cursor-pointer rounded-2xl"
             />
             <h1 className="text-2xl text-[#464D69] font-semibold ml-2 mb-2 md:mb-0">
-              Donation Receipt ALL
+              Direct Donation Receipt
             </h1>
           </div>
 
@@ -656,12 +665,60 @@ const Test = () => {
 
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="mb-4">
+            <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Autocomplete
+                  disablePortal
+                  name="donor_fts_id"
+                  options={donorListData.map((donor) => ({
+                    ...donor,
+                    label: `${donor.donor_full_name} (${donor.donor_mobile})`,
+                    id: donor.donor_fts_id,
+                  }))}
+                  loading={donorListData.length === 0}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.id}>
+                      {option.label}
+                    </li>
+                  )}
+                  isOptionEqualToValue={(option, value) =>
+                    option.donor_fts_id === value.donor_fts_id
+                  }
+                  onChange={(event, selectedOption) =>
+                    handleDonorChange(selectedOption)
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Donor"
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          height: 40,
+                          fontSize: "1rem",
+                        },
+                      }}
+                    />
+                  )}
+                  loadingText="Loading donors..."
+                />
+              </div>
+
+              <div className="flex items-center">
+                <h3 className="text-md font-semibold text-black">
+                  Pan No: {pan || "N/A"}
+                </h3>
+              </div>
+
+              <div className="flex items-center">
+                <h3 className="text-md font-semibold text-black">
+                  Mobile: {userdata.donor_mobile || "N/A"}
+                </h3>
+              </div>
+            </div>
+            {/* <div className="mb-4">
               <Autocomplete
                 disablePortal
-                name="donor_fts_id"
                 options={donorListData.map((donor) => ({
-                  ...donor,
                   label: donor.donor_full_name,
                   id: donor.donor_fts_id,
                 }))}
@@ -671,9 +728,7 @@ const Test = () => {
                     {option.label}
                   </li>
                 )}
-                isOptionEqualToValue={(option, value) =>
-                  option.donor_fts_id === value.donor_fts_id
-                }
+                isOptionEqualToValue={(option, value) => option.id === value.id}
                 onChange={(event, selectedOption) =>
                   handleDonorChange(selectedOption)
                 }
@@ -691,7 +746,7 @@ const Test = () => {
                 )}
                 loadingText="Loading donors..."
               />
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 gap-20 md:gap-4 lg:grid-cols-2">
               <div className="col-span-1">
@@ -715,7 +770,15 @@ const Test = () => {
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap">
+              {/* <div className="flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap"> */}
+              <div
+                className={`flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap ${
+                  typeof donor.donor_fts_id === "string" &&
+                  donor.donor_fts_id.trim() === ""
+                    ? "opacity-50 pointer-events-none"
+                    : ""
+                }`}
+              >
                 <div className="flex flex-col flex-1 sm:mt-10px md:mt-0">
                   <FormLabel required>Family Member</FormLabel>
                   {renderButtonGroup(
@@ -818,7 +881,7 @@ const Test = () => {
 
                 <div className="w-full sm:w-1/4 lg:w-1 flex items-center justify-start lg:justify-center">
                   <button
-                    color="error"
+                    // color="error"
                     onClick={() => removeUser(index)}
                     className="text-2xl text-red-600"
                     aria-label="Delete"
@@ -877,36 +940,4 @@ const Test = () => {
   );
 };
 
-export default Test;
-
-<div className="p-4 bg-white rounded-b-xl">
-  <div className="flex justify-between items-start">
-    <div className="space-y-1">
-      <h3 className="text-lg font-semibold text-black">
-        {userdata.donor_full_name}
-      </h3>
-      <p className="text-xs font-semibold text-black">
-        PDS Id: {userdata.donor_fts_id}
-      </p>
-    </div>
-    <div className="space-y-1 relative">
-      <div className="flex items-center">
-        <h3 className="text-md font-semibold text-black">Pan No: {pan}</h3>
-      </div>
-
-      <p className="   text-xs font-semibold text-black">
-        Receipt Date: {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")}{" "}
-        ({finalyear})
-      </p>
-    </div>
-    {donor.c_receipt_total_amount > 2000 &&
-    donor.c_receipt_exemption_type == "80G" &&
-    pan == "NA" ? (
-      <span className="amounterror">
-        Max amount allowedwithout Pan card is 2000
-      </span>
-    ) : (
-      ""
-    )}
-  </div>
-</div>;
+export default CashRecepitAll;

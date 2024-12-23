@@ -462,7 +462,8 @@ const MaterialRecepitAll = () => {
                   name="donor_fts_id"
                   options={donorListData.map((donor) => ({
                     ...donor,
-                    label: donor.donor_full_name,
+                    // label: donor.donor_full_name,
+                    label: `${donor.donor_full_name} (${donor.donor_mobile})`,
                     id: donor.donor_fts_id,
                   }))}
                   loading={donorListData.length === 0}

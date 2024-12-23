@@ -615,7 +615,12 @@ const CashRecepitAll = () => {
   };
   console.log(donor.donor_fts_id, "out");
 
-  //PAN number
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
 
   return (
     <Layout>
@@ -667,7 +672,7 @@ const CashRecepitAll = () => {
                   name="donor_fts_id"
                   options={donorListData.map((donor) => ({
                     ...donor,
-                    label: donor.donor_full_name,
+                    label: `${donor.donor_full_name} (${donor.donor_mobile})`,
                     id: donor.donor_fts_id,
                   }))}
                   loading={donorListData.length === 0}
