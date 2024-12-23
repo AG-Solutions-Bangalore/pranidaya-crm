@@ -7,7 +7,11 @@ import Fields from "../../components/common/TextField/TextField";
 import { toast, Toaster } from "react-hot-toast";
 import { BaseUrl } from "../../base/BaseUrl";
 import moment from "moment/moment";
-import { Button, Input } from "@material-tailwind/react";
+import { Button, ButtonGroup, Input } from "@material-tailwind/react";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { CircularProgress, FormLabel } from "@mui/material";
+import Dropdown from "../../components/common/DropDown";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -148,15 +152,16 @@ const donation_type_2 = [
   },
 ];
 
-const DonorDonationReceipt = () => {
+const CashRecepitAll = () => {
   const navigate = useNavigate();
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
   const { id } = useParams();
   const [userdata, setUserdata] = useState("");
+  const [donorListData, setDonorListData] = useState([]);
 
   const [userfamilydata, setUserfFamilydata] = useState("");
-
+  console.log(userfamilydata, "userfamilydata");
   // console.log(id);
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -214,6 +219,7 @@ const DonorDonationReceipt = () => {
   }, []);
   const [donor, setDonor] = useState({
     indicomp_fts_id: "",
+    donor_fts_id: "",
     c_receipt_financial_year: "",
     c_receipt_date: check ? dayClose : dayClose,
     c_receipt_exemption_type: "",
@@ -255,7 +261,25 @@ const DonorDonationReceipt = () => {
       .then((response) => response.json())
       .then((data) => setOccasion(data.occasion));
   }, []);
-  // Fetch vendors and items on mount
+
+  useEffect(() => {
+    const fetchOpenData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${BaseUrl}/fetch-donor-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setDonorListData(response?.data?.donor);
+      } catch (error) {
+        console.error("Error fetching open list enquiry data", error);
+      }
+    };
+
+    fetchOpenData();
+  }, []);
   useEffect(() => {
     const fetchVendorData = async () => {
       const response = await axios.get(`${BaseUrl}/fetch-vendor`, {
@@ -374,6 +398,7 @@ const DonorDonationReceipt = () => {
     const requiredFields = [
       { field: donor.c_receipt_exemption_type, name: "Category" },
       { field: donor.c_receipt_tran_pay_mode, name: "Transaction Type" },
+      { field: donor.donor_fts_id, name: "Donor Name" },
     ];
 
     const emptyFields = requiredFields.filter((item) => !item.field);
@@ -384,7 +409,7 @@ const DonorDonationReceipt = () => {
     }
 
     let data = {
-      donor_fts_id: userdata.donor_fts_id,
+      donor_fts_id: donor.donor_fts_id,
       c_receipt_financial_year: currentYear,
       c_receipt_date: check ? dayClose : dayClose,
       c_receipt_exemption_type: donor.c_receipt_exemption_type,
@@ -450,18 +475,24 @@ const DonorDonationReceipt = () => {
   };
 
   useEffect(() => {
-    axios({
-      url: BaseUrl + "/fetch-donor-by-id/" + id,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      setUserdata(res.data.donor);
-      setUserfFamilydata(res.data.familyMember);
-      console.log("datatable", res.data.donor);
-    });
-  }, []);
+    if (donor && donor.donor_fts_id) {
+      axios({
+        url: `${BaseUrl}/fetch-donor-by-id/${donor.donor_fts_id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((res) => {
+          setUserfFamilydata(res.data.familyMember);
+          setUserdata(res.data.donor);
+          console.log("Selected Donor Data", res.data.donor);
+        })
+        .catch((error) => {
+          console.error("Error fetching donor data", error);
+        });
+    }
+  }, [donor?.donor_fts_id]);
   //DAY CLOSE
 
   //DAY close
@@ -541,6 +572,51 @@ const DonorDonationReceipt = () => {
       }
     });
   };
+
+  const handleButtonGroupChange = (stateName, value) => {
+    console.log(value);
+
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      [stateName]: value,
+    }));
+  };
+
+  const renderButtonGroup = (options, stateName, currentValue) => (
+    <ButtonGroup className="w-full h-9 flex flex-wrap  ">
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          onClick={() => handleButtonGroupChange(stateName, option.value)}
+          className={`flex-grow ${
+            currentValue === option.value
+              ? "bg-green-500 text-black"
+              : "bg-[#E1F5FA] text-blue-gray-700 hover:bg-blue-100"
+          } text-[10px] lg:text-xs py-2 lg:py-0
+            w-1/2 md:w-1/3 lg:w-auto rounded-none  mt-1 lg:mt-0   `}
+        >
+          {option.label}
+        </Button>
+      ))}
+    </ButtonGroup>
+  );
+  //   const handleDonorChange = (selectedDonor) => {
+  //     console.log(selectedDonor.donor_fts_id);
+  //     setDonor(selectedDonor.donor_fts_id);
+  //   };
+
+  const handleDonorChange = (selectedDonor) => {
+    console.log(selectedDonor.donor_fts_id);
+
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      donor_fts_id: selectedDonor.donor_fts_id,
+    }));
+  };
+  console.log(donor.donor_fts_id, "out");
+
+  //PAN number
+
   return (
     <Layout>
       <Toaster position="top-right" reverseOrder={false} />
@@ -552,7 +628,7 @@ const DonorDonationReceipt = () => {
               className="text-white bg-[#464D69] p-1 w-10 h-8 cursor-pointer rounded-2xl"
             />
             <h1 className="text-2xl text-[#464D69] font-semibold ml-2 mb-2 md:mb-0">
-              Donation Receipt
+              Direct Donation Receipt
             </h1>
           </div>
 
@@ -581,132 +657,149 @@ const DonorDonationReceipt = () => {
             )}
           </div>
         </div>
-        {/* <div className="p-4 ">
-          <div className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-3  lg:grid-cols-6 gap-4 ">
-              <div className="text-gray-700 md:col-span-2">
-                {userdata.donor_full_name}
-              </div>
-              <div className="text-gray-700">
-                {" "}
-                <strong>PDS Id:</strong> {userdata.donor_fts_id}
-              </div>
-              <div className="text-gray-700">
-                {" "}
-                <strong>Pan No:</strong> {pan}
-              </div>
-              <div className="text-gray-700 md:col-span-2">
-                <strong>Receipt Date:</strong>{" "}
-                {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")} (
-                {finalyear})
-              </div>
-            </div>
-            {donor.c_receipt_total_amount > 2000 &&
-            donor.c_receipt_exemption_type == "80G" &&
-            pan == "NA" ? (
-              <span className="amounterror">
-                Max amount allowedwithout Pan card is 2000
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-        </div> */}
-        <div className="p-4 bg-white rounded-b-xl shadow-xl mb-4">
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-black">
-                {userdata.donor_full_name}
-              </h3>
-              <p className="text-xs font-semibold text-black">
-                PDS Id: {userdata.donor_fts_id}
-              </p>
-            </div>
-            <div className="space-y-1 relative">
-              <div className="flex items-center">
-                <h3 className="text-md font-semibold text-black">
-                  Pan No: {pan}
-                </h3>
-              </div>
-
-              <p className="   text-xs font-semibold text-black">
-                Receipt Date:{" "}
-                {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")} (
-                {finalyear})
-              </p>
-            </div>
-            {donor.c_receipt_total_amount > 2000 &&
-            donor.c_receipt_exemption_type == "80G" &&
-            pan == "NA" ? (
-              <span className="amounterror">
-                Max amount allowedwithout Pan card is 2000
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
 
         <div className="p-6  bg-white shadow-md rounded-lg">
           <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1  lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
-              <div className="w-full col-span-1 sm:col-span-2 lg:col-span-2">
-                <Fields
-                  type="newwhatsappDropdown"
-                  title="Category"
-                  name="c_receipt_exemption_type"
-                  value={donor.c_receipt_exemption_type}
-                  onChange={(e) => onInputChange(e)}
-                  required={true}
-                  options={exemption}
-                />
-              </div>
-
-              <div className="col-span-1 sm:col-span-2 lg:col-span-2">
-                <Fields
-                  type="transactionDropdown"
-                  title="Transaction Type"
-                  required={true}
-                  options={
-                    donor.c_receipt_exemption_type === "80G" &&
-                    donor.c_receipt_total_amount > 2000
-                      ? pay_mode_2
-                      : pay_mode
+            <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Autocomplete
+                  disablePortal
+                  name="donor_fts_id"
+                  options={donorListData.map((donor) => ({
+                    ...donor,
+                    label: donor.donor_full_name,
+                    id: donor.donor_fts_id,
+                  }))}
+                  loading={donorListData.length === 0}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.id}>
+                      {option.label}
+                    </li>
+                  )}
+                  isOptionEqualToValue={(option, value) =>
+                    option.donor_fts_id === value.donor_fts_id
                   }
-                  name="c_receipt_tran_pay_mode"
-                  value={donor.c_receipt_tran_pay_mode}
-                  onChange={(e) => onInputChange(e)}
+                  onChange={(event, selectedOption) =>
+                    handleDonorChange(selectedOption)
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Donor"
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          height: 40,
+                          fontSize: "1rem",
+                        },
+                      }}
+                    />
+                  )}
+                  loadingText="Loading donors..."
                 />
               </div>
 
-              <div className="col-span-1 sm:col-span-2 lg:col-span-2 flex flex-col sm:flex-row gap-4">
-                <Fields
-                  type="familyDropdowns"
-                  title="Family Member"
-                  required={true}
-                  name="family_full_check"
-                  value={donor.family_full_check}
-                  onChange={(e) => onInputChange(e)}
-                  options={family_check}
-                  className="flex-1"
-                />
+              <div className="flex items-center">
+                <h3 className="text-md font-semibold text-black">
+                  Pan No: {pan || "N/A"}
+                </h3>
+              </div>
 
-                {donor.family_full_check === "Yes" && (
-                  <Fields
-                    select
-                    title="Family Member"
-                    type="familyDropdown"
-                    name="family_full_name"
-                    value={donor.family_full_name}
-                    onChange={(e) => onInputChange(e)}
-                    options={userfamilydata}
-                    className="flex-1"
-                    size="small"
+              <div className="flex items-center">
+                <h3 className="text-md font-semibold text-black">
+                  Mobile: {userdata.donor_mobile || "N/A"}
+                </h3>
+              </div>
+            </div>
+            {/* <div className="mb-4">
+              <Autocomplete
+                disablePortal
+                options={donorListData.map((donor) => ({
+                  label: donor.donor_full_name,
+                  id: donor.donor_fts_id,
+                }))}
+                loading={donorListData.length === 0}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    {option.label}
+                  </li>
+                )}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(event, selectedOption) =>
+                  handleDonorChange(selectedOption)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Donor"
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        height: 40,
+                        fontSize: "1rem",
+                      },
+                    }}
                   />
+                )}
+                loadingText="Loading donors..."
+              />
+            </div> */}
+
+            <div className="grid grid-cols-1 gap-20 md:gap-4 lg:grid-cols-2">
+              <div className="col-span-1">
+                <FormLabel required>Category</FormLabel>
+                {renderButtonGroup(
+                  exemption,
+                  "c_receipt_exemption_type",
+                  donor.c_receipt_exemption_type
                 )}
               </div>
 
-              <div className="col-span-1 sm:col-span-2 lg:col-span-2 sm:mt-4">
+              <div className="col-span-1">
+                <FormLabel required>Transaction Type</FormLabel>
+                {renderButtonGroup(
+                  donor.c_receipt_exemption_type === "80G" &&
+                    donor.c_receipt_total_amount > 2000
+                    ? pay_mode_2
+                    : pay_mode,
+                  "c_receipt_tran_pay_mode",
+                  donor.c_receipt_tran_pay_mode
+                )}
+              </div>
+
+              {/* <div className="flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap"> */}
+              <div
+                className={`flex flex-wrap gap-5 lg:gap-4 lg:flex-nowrap ${
+                  typeof donor.donor_fts_id === "string" &&
+                  donor.donor_fts_id.trim() === ""
+                    ? "opacity-50 pointer-events-none"
+                    : ""
+                }`}
+              >
+                <div className="flex flex-col flex-1 sm:mt-10px md:mt-0">
+                  <FormLabel required>Family Member</FormLabel>
+                  {renderButtonGroup(
+                    family_check,
+                    "family_full_check",
+                    donor.family_full_check
+                  )}
+                </div>
+
+                {donor.family_full_check === "Yes" && (
+                  <div className="flex flex-1 mt-5">
+                    <Dropdown
+                      select
+                      label="Family Member"
+                      name="family_full_name"
+                      value={donor.family_full_name}
+                      onChange={(e) => onInputChange(e)}
+                      options={userfamilydata}
+                      className="flex-1"
+                      size="small"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="col-span-1  mt-5">
                 <Fields
                   select
                   title="On Occasion"
@@ -719,7 +812,7 @@ const DonorDonationReceipt = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1  lg:grid-cols-3 gap-4 mb-4 md:my-5 ">
+            <div className="grid grid-cols-1  lg:grid-cols-3 gap-4 mb-4 my-5 ">
               <div>
                 <Fields
                   type="textField"
@@ -751,11 +844,8 @@ const DonorDonationReceipt = () => {
             </div>
 
             {users.map((user, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-1  lg:grid-cols-7 gap-4 mb-4"
-              >
-                <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+              <div key={index} className="flex flex-wrap gap-4 mb-4">
+                <div className="w-full sm:w-1/2 md:w-3/5 lg:w-3/5">
                   <Fields
                     required
                     select
@@ -770,7 +860,7 @@ const DonorDonationReceipt = () => {
                   />
                 </div>
 
-                <div className="col-span-1 sm:col-span-1">
+                <div className="w-full sm:w-1/4 lg:w-1/5">
                   <Input
                     required
                     label="Amount"
@@ -784,9 +874,9 @@ const DonorDonationReceipt = () => {
                   />
                 </div>
 
-                <div className="flex items-center  justify-start lg:justify-center col-span-2 ">
+                <div className="w-full sm:w-1/4 lg:w-1 flex items-center justify-start lg:justify-center">
                   <button
-                    color="error"
+                    // color="error"
                     onClick={() => removeUser(index)}
                     className="text-2xl text-red-600"
                     aria-label="Delete"
@@ -797,17 +887,20 @@ const DonorDonationReceipt = () => {
                 </div>
               </div>
             ))}
+            <div className="flex flex-wrap gap-4 mt-4">
+              {/* Add More Button */}
+              <div className="w-full sm:w-auto flex justify-center sm:justify-start">
+                <Button
+                  onClick={addItem}
+                  className="bg-blue-400 flex justify-center"
+                  disabled={isAddMoreDisabled()}
+                >
+                  Add More
+                </Button>
+              </div>
 
-            <div className="flex justify-start space-x-2">
-              <Button
-                onClick={addItem}
-                className="mt-4 bg-blue-400 flex "
-                disabled={isAddMoreDisabled()}
-              >
-                Add More
-              </Button>
-
-              <div className="w-56 mt-4 ">
+              {/* Total Amount Input */}
+              <div className="w-full sm:w-56">
                 <Input
                   type="text"
                   label="Total Amount"
@@ -818,7 +911,7 @@ const DonorDonationReceipt = () => {
                   labelProps={{
                     className: "!text-gray-900",
                   }}
-                  className=" text-lg"
+                  className="text-lg"
                 />
               </div>
             </div>
@@ -842,4 +935,4 @@ const DonorDonationReceipt = () => {
   );
 };
 
-export default DonorDonationReceipt;
+export default CashRecepitAll;

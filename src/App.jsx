@@ -54,6 +54,9 @@ import ListOccasion from "./pages/Master/Occasion/Listoccasion";
 import AddOccasion from "./pages/Master/Occasion/Addoccasion";
 import EditOccasion from "./pages/Master/Occasion/Editoccasion";
 import EditDuplicate from "./pages/DonorList/Duplicate/EditDuplicate";
+import Test from "./pages/test";
+import MaterialRecepitAll from "./pages/DonorList/MaterialRecepitAll";
+import CashRecepitAll from "./pages/DonorList/CashRecepitAll";
 const App = () => {
   return (
     <>
@@ -77,6 +80,8 @@ const App = () => {
           path="/createrecepit-donor/:id?"
           element={<CreateDonorRecepit />}
         />
+        <Route path="/cashrecepitall/:id?" element={<CashRecepitAll />} />
+        <Route path="/materialrecepitall" element={<MaterialRecepitAll />} />
         <Route path="/viewdonor-list/:id" element={<ViewDonorDetails />} />
         <Route
           path="/recepitdonor-list/:id"
@@ -173,6 +178,7 @@ const App = () => {
           element={<ProtectedRoute element={<DownloadWebDonation />} />}
         />
         <Route path="/webdonation" element={<WebDonation />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </>
   );

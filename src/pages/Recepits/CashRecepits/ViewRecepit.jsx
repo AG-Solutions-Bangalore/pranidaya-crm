@@ -125,17 +125,29 @@ function ViewCashRecepit() {
     });
   };
 
+  // const whatsApp = (e) => {
+  //   e.preventDefault();
+
+  //   const phoneNumber = donor.donor_whatsapp;
+  //   const message = "Hello!";
+  //   const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+  //     message
+  //   )}`;
+  //   window.open(whatsappLink, "_blank");
+  // };
   const whatsApp = (e) => {
     e.preventDefault();
-
-    const phoneNumber = donor.donor_whatsapp;
-    const message = "Hello!";
-    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(whatsappLink, "_blank");
+    if (donor?.donor_whatsapp) {
+      const phoneNumber = donor.donor_whatsapp;
+      const message = "Hello!";
+      const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+        message
+      )}`;
+      window.open(whatsappLink, "_blank");
+    } else {
+      toast.error("Donor's WhatsApp number is not available.");
+    }
   };
-
   return (
     <Layout>
       <ToastContainer />
@@ -149,19 +161,35 @@ function ViewCashRecepit() {
             Cash Receipt
           </h1>
         </div>
-        <div
-          className="flex justify-end "
-          onClick={() => {
-            navigate("/donor-list");
-          }}
-        >
-          <Button
-            variant="outlined"
-            className="bg-red-500  text-white"
-            color="red"
+        <div className="flex justify-end space-x-3">
+          <div
+            className="flex justify-end "
+            onClick={() => {
+              navigate("/cashrecepitall");
+            }}
           >
-            Add New Recepit
-          </Button>
+            <Button
+              variant="outlined"
+              className="bg-red-500  text-white"
+              color="red"
+            >
+              Cash Recepit
+            </Button>
+          </div>
+          <div
+            className="flex justify-end "
+            onClick={() => {
+              navigate("/donor-list");
+            }}
+          >
+            <Button
+              variant="outlined"
+              className="bg-red-500  text-white"
+              color="red"
+            >
+              Donor List
+            </Button>
+          </div>
         </div>
       </div>
 

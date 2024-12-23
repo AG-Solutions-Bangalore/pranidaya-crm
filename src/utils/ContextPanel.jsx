@@ -135,6 +135,9 @@ const AppProvider = ({ children }) => {
           "/add-occasion",
           "/edit-occasion",
           "/M-recepit",
+          "/cashrecepitall",
+          "/test",
+          "/materialrecepitall",
         ];
         const isAllowedPath = allowedPaths.some((path) =>
           currentPath.startsWith(path)

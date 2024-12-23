@@ -137,17 +137,31 @@ const DonorList = () => {
   return (
     <Layout>
       <CommonListing />
-      <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
+      <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-4 rounded-lg space-y-4 md:space-y-0">
         <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
           Donor List
         </h3>
 
-        <Link
-          to="/add-donor"
-          className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-        >
-          + Add Donor
-        </Link>
+        <div className="md:space-x-5 space-y-5 md:space-y-0  flex flex-col md:flex-row ">
+          <Link
+            to="/cashrecepitall"
+            className="btn btn-primary text-center text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md w-full md:w-auto"
+          >
+            + CashRecepit
+          </Link>
+          {/* <Link
+            to="/materialrecepitall"
+            className="btn btn-primary text-center text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md w-full md:w-auto"
+          >
+            + DirectMaterialRecepit{" "}
+          </Link> */}
+          <Link
+            to="/add-donor"
+            className="btn btn-primary text-center text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md w-full md:w-auto"
+          >
+            + Add Donor
+          </Link>
+        </div>
       </div>
 
       {/* Show spinner while loading */}
