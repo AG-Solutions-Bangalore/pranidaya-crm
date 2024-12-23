@@ -5,31 +5,19 @@ import axios from "axios";
 import Layout from "../../layout/Layout";
 import Fields from "../../components/common/TextField/TextField";
 import { toast } from "react-toastify";
-// import { Button, IconButton } from "@mui/material";
 import { BaseUrl } from "../../base/BaseUrl";
-import moment from "moment/moment";
-import {
-  Button,
-  Card,
-  CardBody,
-  IconButton,
-  Input,
-} from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
+import { Autocomplete, TextField } from "@mui/material";
 
-// Unit options for dropdown
 const unitOptions = [
   { value: "Kg", label: "Kg" },
   { value: "Ton", label: "Ton" },
 ];
 
-const DonorDonationReceipt = () => {
+const MaterialRecepitAll = () => {
   const navigate = useNavigate();
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
-  const { id } = useParams();
-  const [userdata, setUserdata] = useState("");
-
-  console.log(id);
 
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -48,6 +36,8 @@ const DonorDonationReceipt = () => {
   var preyear = todayyear;
   var finyear = +twoDigitYear + 1;
   var finalyear = preyear + "-" + finyear;
+  const [userdata, setUserdata] = useState("");
+
   const [dayClose, setDayClose] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -68,6 +58,7 @@ const DonorDonationReceipt = () => {
   }, []);
   const [donor, setDonor] = useState({
     indicomp_fts_id: "",
+    donor_fts_id: "",
     m_receipt_financial_year: "",
     m_receipt_date: check ? dayClose : dayClose,
     m_receipt_total_amount: "",
@@ -89,6 +80,7 @@ const DonorDonationReceipt = () => {
     m_receipt_sub_unit: "",
     m_receipt_sub_amount: "",
   };
+  const [donorListData, setDonorListData] = useState([]);
 
   const [users, setUsers] = useState([useTemplate]);
   const [fabric_inward_count, setCount] = useState(1);
@@ -112,6 +104,25 @@ const DonorDonationReceipt = () => {
     };
 
     fetchYearData();
+  }, []);
+
+  useEffect(() => {
+    const fetchOpenData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${BaseUrl}/fetch-donor-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setDonorListData(response?.data?.donor);
+      } catch (error) {
+        console.error("Error fetching open list enquiry data", error);
+      }
+    };
+
+    fetchOpenData();
   }, []);
   //FETCH OCCASION
   const [occasion, setOccasion] = useState([]);
@@ -222,68 +233,71 @@ const DonorDonationReceipt = () => {
     }
   };
 
-  const pan = userdata.donor_pan_no == "" ? "NA" : userdata.donor_pan_no;
-
   const onSubmit = (e) => {
     e.preventDefault();
+    if (!selectedDonor || !selectedDonor.donor_fts_id) {
+      setError(true);
+      return;
+    } else {
+      setError(false);
+      console.log("Form submitted with selected donor:", selectedDonor);
 
-    let data = {
-      indicomp_fts_id: userdata.donor_fts_id,
-      m_receipt_financial_year: currentYear,
-      m_receipt_date: check ? dayClose : dayClose,
-      m_receipt_total_amount: donor.m_receipt_total_amount,
-      m_receipt_tran_pay_mode: donor.m_receipt_tran_pay_mode,
-      m_receipt_tran_pay_details: donor.m_receipt_tran_pay_details,
-      m_receipt_remarks: donor.m_receipt_remarks,
-      m_receipt_reason: donor.m_receipt_reason,
-      m_receipt_email_count: donor.m_receipt_email_count,
-      m_manual_receipt_no: donor.m_manual_receipt_no,
-      m_receipt_count: fabric_inward_count,
-      m_receipt_sub_data: users,
-      m_receipt_vehicle_no: donor.m_receipt_vehicle_no,
-      m_receipt_occasional: donor.m_receipt_occasional,
-    };
-    console.log(data, "MATERIAL DATA");
-    const isValid = document.getElementById("addIndiv").checkValidity();
+      let data = {
+        indicomp_fts_id: donor.donor_fts_id,
+        m_receipt_financial_year: currentYear,
+        m_receipt_date: check ? dayClose : dayClose,
+        m_receipt_total_amount: donor.m_receipt_total_amount,
+        m_receipt_tran_pay_mode: donor.m_receipt_tran_pay_mode,
+        m_receipt_tran_pay_details: donor.m_receipt_tran_pay_details,
+        m_receipt_remarks: donor.m_receipt_remarks,
+        m_receipt_reason: donor.m_receipt_reason,
+        m_receipt_email_count: donor.m_receipt_email_count,
+        m_manual_receipt_no: donor.m_manual_receipt_no,
+        m_receipt_count: fabric_inward_count,
+        m_receipt_sub_data: users,
+        m_receipt_vehicle_no: donor.m_receipt_vehicle_no,
+        m_receipt_occasional: donor.m_receipt_occasional,
+      };
+      console.log(data, "MATERIAL DATA");
+      const isValid = document.getElementById("addIndiv").checkValidity();
 
-    if (isValid) {
-      setIsButtonDisabled(true);
+      if (isValid) {
+        setIsButtonDisabled(true);
 
-      axios
-        .post(`${BaseUrl}/create-m-receipt`, data, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((res) => {
-          if (res.status == 200 && res.data.code == "200") {
-            // toast.success("Donor Created Successfully");
-            // const ids = res.data.latestid.id;
-            // console.log(id);
-            navigate(`/material-view/${res.data.latestid.id}`);
-          } else {
-            toast.error(res.data.message || "Error occurred");
-          }
-        })
-        .catch((err) => {
-          if (err.response) {
-            toast.error(
-              `Error: ${
-                err.response.data.message || "An error occurred on the server"
-              }`
-            );
-            console.error("Server Error:", err.response);
-          } else if (err.request) {
-            toast.error("No response from the server.");
-            console.error("No Response:", err.request);
-          } else {
-            toast.error(`Error: ${err.message}`);
-            console.error("Error Message:", err.message);
-          }
-        })
-        .finally(() => {
-          setIsButtonDisabled(false);
-        });
+        axios
+          .post(`${BaseUrl}/create-m-receipt`, data, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((res) => {
+            if (res.status == 200 && res.data.code == "200") {
+              //   toast.success("Donor Created Successfully");
+              navigate(`/material-view/${res.data.latestid.id}`);
+            } else {
+              toast.error(res.data.message || "Error occurred");
+            }
+          })
+          .catch((err) => {
+            if (err.response) {
+              toast.error(
+                `Error: ${
+                  err.response.data.message || "An error occurred on the server"
+                }`
+              );
+              console.error("Server Error:", err.response);
+            } else if (err.request) {
+              toast.error("No response from the server.");
+              console.error("No Response:", err.request);
+            } else {
+              toast.error(`Error: ${err.message}`);
+              console.error("Error Message:", err.message);
+            }
+          })
+          .finally(() => {
+            setIsButtonDisabled(false);
+          });
+      }
     }
   };
 
@@ -292,17 +306,23 @@ const DonorDonationReceipt = () => {
   };
 
   useEffect(() => {
-    axios({
-      url: BaseUrl + "/fetch-donor-by-id/" + id,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      setUserdata(res.data.donor);
-      console.log("datatable", res.data.donor);
-    });
-  }, []);
+    if (donor && donor.donor_fts_id) {
+      axios({
+        url: `${BaseUrl}/fetch-donor-by-id/${donor.donor_fts_id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((res) => {
+          setUserdata(res.data.donor);
+          console.log("Selected Donor Data", res.data.donor);
+        })
+        .catch((error) => {
+          console.error("Error fetching donor data", error);
+        });
+    }
+  }, [donor?.donor_fts_id]);
   //DAY CLOSE
 
   //DAY close
@@ -382,14 +402,22 @@ const DonorDonationReceipt = () => {
       }
     });
   };
-  // const isAddMoreDisabled = () => {
-  //   return users.some(
-  //     (item) =>
-  //       item.m_receipt_sub_item === "" ||
-  //       item.m_receipt_sub_quantity === "" ||
-  //       item.m_receipt_sub_unit === ""
-  //   );
-  // };
+  const [selectedDonor, setSelectedDonor] = useState(null);
+  const [error, setError] = useState(false);
+  const handleDonorChange = (selectedDonor) => {
+    console.log(selectedDonor.donor_fts_id);
+    setSelectedDonor(selectedDonor);
+    setError(false);
+    console.log(selectedDonor, "in");
+
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      donor_fts_id: selectedDonor.donor_fts_id,
+    }));
+  };
+  console.log(donor.donor_fts_id, "out");
+  const pan = userdata.donor_pan_no == "" ? "NA" : userdata.donor_pan_no;
+
   return (
     <Layout>
       <div>
@@ -418,83 +446,69 @@ const DonorDonationReceipt = () => {
               disabled={dayClose === todayback}
               onClick={dayClose !== todayback ? (e) => onDayClose(e) : null}
               className="btn-get-started  bg-red-400"
-              // color="danger"
+              color="danger"
             >
               + Day Close
             </Button>
           </div>
         </div>
 
-        {/* <div className="p-4 ">
-          <div className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-3  lg:grid-cols-5 gap-4 mb-4">
-              <div className="text-gray-700">
-                {userdata.donor_full_name}
+        <div className="p-6  bg-white shadow-md rounded-lg">
+          <form id="addIndiv" onSubmit={onSubmit}>
+            <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Autocomplete
+                  disablePortal
+                  name="donor_fts_id"
+                  options={donorListData.map((donor) => ({
+                    ...donor,
+                    // label: donor.donor_full_name,
+                    label: `${donor.donor_full_name} (${donor.donor_mobile})`,
+                    id: donor.donor_fts_id,
+                  }))}
+                  loading={donorListData.length === 0}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.id}>
+                      {option.label}
+                    </li>
+                  )}
+                  isOptionEqualToValue={(option, value) =>
+                    option.donor_fts_id === value.donor_fts_id
+                  }
+                  onChange={(event, selectedOption) =>
+                    handleDonorChange(selectedOption)
+                  }
+                  rules={{ required: true }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Donor"
+                      error={error} // Show error if validation fails
+                      helperText={error ? "Please select a donor" : ""}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          height: 40,
+                          fontSize: "1rem",
+                        },
+                      }}
+                    />
+                  )}
+                  loadingText="Loading donors..."
+                />
               </div>
-              <div className="text-gray-700">
-                <strong>PDS ID:</strong>
-                {userdata.donor_fts_id}
-              </div>
-              <div className="text-gray-700">
-                <strong>Pan No:</strong>
-                {pan}
-              </div>
-              <div className="text-gray-700">
-                <strong>Receipt Date:</strong>{" "}
-                {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")}{" "}
-              </div>
-              <div className="text-gray-700">
-                <strong>Year:</strong>
-                {finalyear}
-              </div>
-            </div>
-            {donor.m_receipt_total_amount > 2000 &&
-            donor.c_receipt_exemption_type == "80G" &&
-            pan == "NA" ? (
-              <span className="amounterror">
-                Max amount allowedwithout Pan card is 2000
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-        </div> */}
-        <div className="p-4 bg-white rounded-b-xl shadow-xl mb-4">
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-black">
-                {userdata.donor_full_name}
-              </h3>
-              <p className="text-xs font-semibold text-black">
-                PDS Id: {userdata.donor_fts_id}
-              </p>
-            </div>
-            <div className="space-y-1 relative">
+
               <div className="flex items-center">
                 <h3 className="text-md font-semibold text-black">
-                  Pan No: {pan}
+                  Pan No: {pan || "N/A"}
                 </h3>
               </div>
 
-              <p className="   text-xs font-semibold text-black">
-                Receipt Date:{" "}
-                {moment(check ? dayClose : dayClose).format("DD-MM-YYYY")} (
-                {finalyear})
-              </p>
+              <div className="flex items-center">
+                <h3 className="text-md font-semibold text-black">
+                  Mobile: {userdata.donor_mobile || "N/A"}
+                </h3>
+              </div>
             </div>
-            {donor.c_receipt_total_amount > 2000 &&
-            donor.c_receipt_exemption_type == "80G" &&
-            pan == "NA" ? (
-              <span className="amounterror">
-                Max amount allowedwithout Pan card is 2000
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-        <div className="p-6  bg-white shadow-md rounded-lg">
-          <form id="addIndiv" onSubmit={onSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
               {/* Purchase Details */}
               <div>
@@ -613,12 +627,16 @@ const DonorDonationReceipt = () => {
             <div className="flex justify-center mt-4 space-x-4">
               <Button
                 type="submit"
+                variant="contained"
+                color="primary"
                 disabled={isButtonDisabled}
                 className="mt-4 bg-blue-400"
               >
                 Submit
               </Button>
               <Button
+                variant="contained"
+                color="secondary"
                 className="mt-4 bg-red-400"
                 onClick={handleBackButton}
               >
@@ -632,4 +650,4 @@ const DonorDonationReceipt = () => {
   );
 };
 
-export default DonorDonationReceipt;
+export default MaterialRecepitAll;
