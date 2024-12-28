@@ -38,24 +38,42 @@ const AddPurchase = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   // Fetch vendors and items on mount
-  useEffect(() => {
-    const fetchVendorData = async () => {
-      const response = await axios.get(`${BaseUrl}/fetch-vendor`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setVendors(response.data.vendor);
-    };
+  const fetchVendorData = async () => {
+    const response = await axios.get(`${BaseUrl}/fetch-vendor`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setVendors(response.data.vendor);
+  };
 
-    const fetchItemData = async () => {
-      const response = await axios.get(`${BaseUrl}/fetch-item`, {
+  const fetchItemData = async () => {
+    const response = await axios.get(`${BaseUrl}/fetch-item`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setItems(response.data.item);
+  };
+
+  const [currentYear, setCurrentYear] = useState("");
+
+  const fetchYearData = async () => {
+    try {
+      const response = await axios.get(`${BaseUrl}/fetch-year`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setItems(response.data.item);
-    };
+
+      setCurrentYear(response.data.year.current_year);
+      console.log(response.data.year.current_year);
+    } catch (error) {
+      console.error("Error fetching year data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchYearData();
 
     fetchVendorData();
     fetchItemData();
@@ -96,6 +114,7 @@ const AddPurchase = () => {
       purchase_total_bill: purchase.purchase_total_bill,
       purchase_count: fabric_inward_count,
       purchase_sub_data: users,
+      purchase_year: currentYear,
     };
 
     const isValid = document.getElementById("addIndiv").checkValidity();
