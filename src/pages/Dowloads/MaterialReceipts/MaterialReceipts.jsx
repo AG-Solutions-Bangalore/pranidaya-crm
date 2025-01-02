@@ -19,6 +19,7 @@ function MaterialReceipts() {
   const unit = [
     { value: "Kg", label: "Kg" },
     { value: "Ton", label: "Ton" },
+    { value: "Bag", label: "Bag" },
   ];
 
   const manual = [
@@ -44,10 +45,17 @@ function MaterialReceipts() {
   });
 
   // Input change handler for native inputs
-  const onInputChange = (name, value) => {
+  const onInputChangeN = (name, value) => {
     setPurchaseDownload({
       ...receiptsdwn,
       [name]: value,
+    });
+  };
+
+  const onInputChange = (e) => {
+    setPurchaseDownload({
+      ...receiptsdwn,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -192,7 +200,7 @@ function MaterialReceipts() {
                   value: item.item_name,
                   label: item.item_name,
                 }))}
-                onChange={(value) => onInputChange("purchase_sub_item", value)}
+                onChange={(value) => onInputChangeN("purchase_sub_item", value)}
               />
             </div>
 
@@ -206,7 +214,7 @@ function MaterialReceipts() {
                   value: option.value,
                   label: option.label,
                 }))}
-                onChange={(value) => onInputChange("purchase_sub_unit", value)}
+                onChange={(value) => onInputChangeN("purchase_sub_unit", value)}
               />
             </div>
 
@@ -220,7 +228,7 @@ function MaterialReceipts() {
                   value: option.value,
                   label: option.label,
                 }))}
-                onChange={(value) => onInputChange("purchase_sub_unit", value)}
+                onChange={(value) => onInputChangeN("purchase_sub_unit", value)}
               />
             </div>
 

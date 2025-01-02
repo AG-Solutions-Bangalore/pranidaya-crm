@@ -14,6 +14,7 @@ import { Input } from "@material-tailwind/react";
 const unitOptions = [
   { value: "Kg", label: "Kg" },
   { value: "Ton", label: "Ton" },
+  { value: "Bag", label: "Bag" },
 ];
 
 const EditConsumption = () => {

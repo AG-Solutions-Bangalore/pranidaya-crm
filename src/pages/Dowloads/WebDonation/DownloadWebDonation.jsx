@@ -18,6 +18,7 @@ function DownloadWebDonation() {
   const unit = [
     { value: "Kg", label: "Kg" },
     { value: "Ton", label: "Ton" },
+    { value: "Bag", label: "Bag" },
   ];
 
   // Get the first and last date
@@ -30,10 +31,17 @@ function DownloadWebDonation() {
   });
 
   // Input change handler for native inputs
-  const onInputChange = (name, value) => {
+  const onInputChangeN = (name, value) => {
     setWebsiteDonationDownload({
       ...receiptsdwn,
       [name]: value,
+    });
+  };
+
+  const onInputChange = (e) => {
+    setWebsiteDonationDownload({
+      ...receiptsdwn,
+      [e.target.name]: e.target.value,
     });
   };
 

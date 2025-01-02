@@ -20,6 +20,7 @@ import {
 const unitOptions = [
   { value: "Kg", label: "Kg" },
   { value: "Ton", label: "Ton" },
+  { value: "Bag", label: "Bag" },
 ];
 
 const DonorDonationReceipt = () => {

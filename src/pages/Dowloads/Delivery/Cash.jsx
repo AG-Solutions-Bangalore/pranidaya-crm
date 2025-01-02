@@ -121,6 +121,13 @@ function Cash() {
     receipt_tran_pay_mode: "",
   });
 
+  const onInputChangeN = (e) => {
+    setReceiptDownload({
+      ...receiptsdwn,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const onInputChange = (e) => {
     setReceiptDownload({
       ...receiptsdwn,
@@ -193,9 +200,10 @@ function Cash() {
                 type="date"
                 label="From Date"
                 className="required"
+                name="receipt_from_date"
                 value={receiptsdwn.receipt_from_date}
                 onChange={(e) => onInputChange(e)}
-                name="receipt_from_date"
+                
               />
             </div>
             <div className="w-full">
@@ -204,9 +212,10 @@ function Cash() {
                 type="date"
                 label="To Date"
                 className="required"
+                name="receipt_to_date"
                 value={receiptsdwn.receipt_to_date}
                 onChange={(e) => onInputChange(e)}
-                name="receipt_to_date"
+                
               />
             </div>
 

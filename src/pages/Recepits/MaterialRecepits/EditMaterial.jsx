@@ -12,6 +12,7 @@ import { Button, Card, CardBody, Input } from "@material-tailwind/react";
 const unit = [
   { value: "Kg", label: "Kg" },
   { value: "Ton", label: "Ton" },
+  { value: "Bag", label: "Bag" },
 ];
 
 const EditMaterial = () => {

@@ -19,6 +19,7 @@ function CashPurchase() {
   const unit = [
     { value: "Kg", label: "Kg" },
     { value: "Ton", label: "Ton" },
+    { value: "Bag", label: "Bag" },
   ];
 
   // Get the first and last date
@@ -33,10 +34,18 @@ function CashPurchase() {
   });
 
   // Input change handler for native inputs
-  const onInputChange = (name, value) => {
+  const onInputChangeN = (name, value) => {
+    
     setPurchaseDownload({
       ...receiptsdwn,
       [name]: value,
+    });
+  };
+
+  const onInputChange = (e) => {
+    setPurchaseDownload({
+      ...receiptsdwn,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -140,7 +149,7 @@ function CashPurchase() {
       <ToastContainer />
       <div className="mt-4 mb-6">
         <PageTitle title={"Download Purchase"}  />
-      </div>
+      </div> 
       <Card className="p-4">
         <h3 className="text-red-500 mb-5">
           Leave blank if you want all records.
@@ -180,7 +189,7 @@ function CashPurchase() {
                   value: item.item_name,
                   label: item.item_name,
                 }))}
-                onChange={(value) => onInputChange("purchase_sub_item", value)}
+                onChange={(value) => onInputChangeN("purchase_sub_item", value)}
               />
             </div>
 
@@ -194,7 +203,7 @@ function CashPurchase() {
                   value: option.value,
                   label: option.label,
                 }))}
-                onChange={(value) => onInputChange("purchase_sub_unit", value)}
+                onChange={(value) => onInputChangeN("purchase_sub_unit", value)}
               />
             </div>
 

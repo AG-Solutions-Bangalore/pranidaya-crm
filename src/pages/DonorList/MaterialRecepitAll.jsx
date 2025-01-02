@@ -12,6 +12,7 @@ import { Autocomplete, TextField } from "@mui/material";
 const unitOptions = [
   { value: "Kg", label: "Kg" },
   { value: "Ton", label: "Ton" },
+  { value: "Bag", label: "Bag" },
 ];
 
 const MaterialRecepitAll = () => {

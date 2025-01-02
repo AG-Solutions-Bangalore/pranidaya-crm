@@ -18,6 +18,7 @@ function DowloadConsumption() {
   const unit = [
     { value: "Kg", label: "Kg" },
     { value: "Ton", label: "Ton" },
+    { value: "Bag", label: "Bag" },
   ];
 
   // Get the first and last date
@@ -26,16 +27,23 @@ function DowloadConsumption() {
 
   const [receiptsdwn, setConsumptionDownload] = useState({
     cons_from_date: firstdate,
-    receipt_to_date: todayback,
+    cons_to_date: todayback,
     cons_sub_item: "",
     cons_sub_unit: "",
   });
 
   // Input change handler for native inputs
-  const onInputChange = (name, value) => {
+  const onInputChangeN = (name, value) => {
     setConsumptionDownload({
       ...receiptsdwn,
       [name]: value,
+    });
+  };
+
+  const onInputChange = (e) => {
+    setConsumptionDownload({
+      ...receiptsdwn,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -113,7 +121,7 @@ function DowloadConsumption() {
                 required
                 type="date"
                 label="From Date"
-                name="receipt_from_date"
+                name="cons_from_date"
                 className="required"
                 value={receiptsdwn.cons_from_date}
                 onChange={(e) => onInputChange(e)}
@@ -125,8 +133,8 @@ function DowloadConsumption() {
                 type="date"
                 label="To Date"
                 className="required"
-                name="receipt_to_date"
-                value={receiptsdwn.receipt_to_date}
+                name="cons_to_date"
+                value={receiptsdwn.cons_to_date}
                 onChange={(e) => onInputChange(e)}
               />
             </div>
@@ -140,7 +148,7 @@ function DowloadConsumption() {
                   value: item.item_name,
                   label: item.item_name,
                 }))}
-                onChange={(value) => onInputChange("cons_sub_item", value)}
+                onChange={(value) => onInputChangeN("cons_sub_item", value)}
               />
             </div>
 
@@ -154,7 +162,7 @@ function DowloadConsumption() {
                   value: option.value,
                   label: option.label,
                 }))}
-                onChange={(value) => onInputChange("cons_sub_unit", value)}
+                onChange={(value) => onInputChangeN("cons_sub_unit", value)}
               />
             </div>
 
